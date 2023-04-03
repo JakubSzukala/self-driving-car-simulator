@@ -8,9 +8,10 @@ public class VoronoiDiagramScript : MonoBehaviour
 {
     private RawImage img;
     private int imgSize;
-    private Vector2Int[] rootPoints;
+    [SerializeField] private int gridSize = 10;
+    private int pixelsPerGridSqr;
+    private Vector2Int[, ] rootPointsPerGridSqr;
 
-    public uint rootPointsN;
 
     private void Awake()
     {
@@ -27,6 +28,8 @@ public class VoronoiDiagramScript : MonoBehaviour
 
     public void GenerateDiagram()
     {
+        pixelsPerGridSqr = (int)(imgSize / gridSize);
+
         // Create a white background
         Texture2D texture = new Texture2D(imgSize, imgSize);
         texture.filterMode = FilterMode.Point;
@@ -41,10 +44,14 @@ public class VoronoiDiagramScript : MonoBehaviour
         }
 
         // Generate and place root points
-        GenerateRootPoints(rootPointsN);
-        foreach(var point in rootPoints)
+        GenerateRootPoints();
+        for (int i = 0; i < gridSize; i++)
         {
-            texture.SetPixel(point.x, point.y, new Color(0f, 0f, 0f));
+            for (int j = 0; j < gridSize; j++)
+            {
+                Vector2Int point = rootPointsPerGridSqr[i, j];
+                texture.SetPixel(point.x, point.y, new Color(0f, 0f, 0f));
+            }
         }
 
         texture.Apply(); // Copy from CPU to GPU memory to render
@@ -52,12 +59,19 @@ public class VoronoiDiagramScript : MonoBehaviour
     }
 
 
-    private void GenerateRootPoints(uint n)
+    private void GenerateRootPoints()
     {
-        rootPoints = new Vector2Int[n];
-        for (int i = 0; i < rootPoints.Length; i++)
+        rootPointsPerGridSqr = new Vector2Int[gridSize, gridSize];
+        for (int i = 0; i < gridSize; i++)
         {
-            rootPoints[i] = new Vector2Int(Random.Range(0, imgSize), Random.Range(0, imgSize));
+            for (int j = 0; j < gridSize; j++)
+            {
+                // Indexed by grid squares but coordinates are absolute, not relative to grid square
+                rootPointsPerGridSqr[i, j] = new Vector2Int(
+                    Random.Range(0, pixelsPerGridSqr) + (i * pixelsPerGridSqr),
+                    Random.Range(0, pixelsPerGridSqr) + (j * pixelsPerGridSqr)
+                    );
+            }
         }
     }
 }
