@@ -5,13 +5,33 @@ using UnityEngine.UI;
 
 public class VoronoiDiagramScript : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private RawImage img;
+    private int imgSize;
+
+    private void Awake()
     {
+        img = GetComponent<RawImage>();
+        imgSize = Mathf.RoundToInt(img.GetComponent<RectTransform>().sizeDelta.x);
     }
 
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
+        GenerateDiagram();
+    }
+
+    private void GenerateDiagram()
+    {
+        Texture2D texture = new Texture2D(imgSize, imgSize);
+        texture.filterMode = FilterMode.Point;
+        for (int i = 0; i < imgSize; i++)
+        {
+            for (int j = 0; j < imgSize; j++)
+            {
+                float clr = Random.Range(0, 1f);
+                texture.SetPixel(i, j, new Color(clr, clr, clr));
+            }
+        }
+        texture.Apply(); // Copy to GPU memory to render
+        img.texture = texture;
     }
 }
