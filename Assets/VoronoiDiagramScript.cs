@@ -6,12 +6,35 @@ using UnityEngine.UI;
 [System.Serializable]
 public class VoronoiDiagramScript : MonoBehaviour
 {
+    // References to model and view
+    private VoronoiDiagramModel vModel;
+    private VoronoiDiagramView vView;
+    private RawImage map;
+    private int mapSize;
+    public int gridSize = 10;
+
+    private void Awake()
+    {
+        map = GetComponent<RawImage>();
+        mapSize = Mathf.RoundToInt(map.GetComponent<RectTransform>().sizeDelta.x);
+        vModel = new VoronoiDiagramModel(mapSize, gridSize);
+        vView = new VoronoiDiagramView();
+    }
+
+
+    private void Start()
+    {
+        vModel.GenerateRootPoints();
+        Texture2D targetTexture;
+        vView.DrawRootPoints(vModel.RootPoints, vModel.MapSize, out targetTexture);
+        map.texture = targetTexture;
+    }
+    /*
     private RawImage img;
     private int imgSize;
     public int gridSize;
     private int pixelsPerGridSqr;
     private Vector2Int[, ] rootPointsPerGridSqr;
-    private Color[] rootPointsColors;
 
 
     private void Awake()
@@ -29,8 +52,6 @@ public class VoronoiDiagramScript : MonoBehaviour
 
     public void GenerateDiagram()
     {
-        GenerateColors();
-
         // For conversion between pixel coords and grid square
         pixelsPerGridSqr = (int)(imgSize / gridSize);
 
@@ -84,18 +105,23 @@ public class VoronoiDiagramScript : MonoBehaviour
     }
 
 
-    private void GenerateColors()
+    private Color[] GenerateColors()
     {
+
+        Color[] rootPointsColors;
         rootPointsColors = new Color[gridSize * gridSize];
         for (int i = 0; i < rootPointsColors.Length; i++)
         {
             rootPointsColors[i] = new Color(Random.Range(0, 1f), Random.Range(0, 1f), Random.Range(0, 1f));
         }
+        return rootPointsColors;
     }
 
 
     private void AssignMembership(Texture2D texture)
     {
+
+        Color[] rootPointsColors = GenerateColors();
         for (int i = 0; i < imgSize; i++)
         {
             for (int j = 0; j < imgSize; j++)
@@ -128,5 +154,67 @@ public class VoronoiDiagramScript : MonoBehaviour
                 texture.SetPixel(i, j, clr);
             }
         }
+    }
+    */
+}
+
+
+public class VoronoiDiagramModel
+{
+    public int MapSize
+    { get; private set; }
+    public int GridSize
+    { get; private set; }
+    private int pxPerGridSqr;
+    public Vector2Int[,] RootPoints
+    { get; private set; }
+
+
+    public VoronoiDiagramModel(int mapSize, int gridSize)
+    {
+        this.MapSize = mapSize;
+        this.GridSize = gridSize;
+        this.pxPerGridSqr = mapSize / gridSize;
+    }
+
+
+    public void GenerateRootPoints()
+    {
+        RootPoints = new Vector2Int[GridSize, GridSize];
+        for (int i = 0; i < GridSize; i++)
+        {
+            for (int j = 0; j < GridSize; j++)
+            {
+                // Indexed by grid squares but coordinates are absolute, not relative to grid square
+                RootPoints[i, j] = new Vector2Int(
+                    Random.Range(0, pxPerGridSqr) + (i * pxPerGridSqr),
+                    Random.Range(0, pxPerGridSqr) + (j * pxPerGridSqr)
+                    );
+            }
+        }
+    }
+}
+
+
+public class VoronoiDiagramView
+{
+    public void DrawRootPoints(Vector2Int[,] rootPoints, int textureSize, out Texture2D texture)
+    {
+        texture = new Texture2D(textureSize, textureSize);
+        texture.filterMode = FilterMode.Point;
+        Color[] whiteBackground = new Color[textureSize * textureSize]; //{ new Color(1f, 1f, 1f) };
+        System.Array.Fill<Color>(whiteBackground, new Color(1f, 1f, 1f));
+        texture.SetPixels(0, 0, textureSize, textureSize, whiteBackground);
+
+        // rootPoints are indexed in a form of a grid but their coordinates are absolute
+        Color blackPoints = new Color(0f, 0f, 0f);
+        for (int i = 0; i < rootPoints.GetLength(0); i++)
+        {
+            for (int j = 0; j < rootPoints.GetLength(0); j++)
+            {
+                texture.SetPixel(rootPoints[i, j].x, rootPoints[i, j].y, blackPoints);
+            }
+        }
+        texture.Apply();
     }
 }
