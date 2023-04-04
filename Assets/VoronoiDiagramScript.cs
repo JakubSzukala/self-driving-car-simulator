@@ -115,25 +115,35 @@ public class VoronoiDiagramModel
 
     public void Process()
     {
+        int N = (generateRegions ? 1 : 0) + (generateEdges ? 1 : 0) + (generateVertices ? 1 : 0);
+        var closestNCells = new (float distance, VoronoiCell cell)[N];
         for (int i = 0; i < MapSize; i++)
         {
             for (int j = 0; j < MapSize; j++)
             {
-                VoronoiCell first = new VoronoiCell();
-                VoronoiCell second = new VoronoiCell();
-                VoronoiCell third = new VoronoiCell();
-                Get3ClosestCells(new Vector2Int(i, j), ref first, ref second, ref third);
+                 closestNCells = GetNClosestCells(new Vector2Int(i, j), N);
 
                 if (generateRegions)
                 {
-                    first.Region.Add(new Vector2Int(i, j));
+                    closestNCells[0].cell.Region.Add(new Vector2Int(i, j));
+                }
+
+                if (generateEdges)
+                {
+                    bool isEdge = Mathf.Abs(closestNCells[0].distance - closestNCells[1].distance) < Epsilon;
+                    if (isEdge)
+                    {
+                        closestNCells[0].cell.Edges.Add(new Vector2Int(i, j));
+                        closestNCells[1].cell.Edges.Add(new Vector2Int(i, j));
+                    }
                 }
             }
         }
     }
 
-    public void Get3ClosestCells(Vector2Int point, ref VoronoiCell first, ref VoronoiCell second, ref VoronoiCell third)
+    public (float distance, VoronoiCell cell)[] GetNClosestCells(Vector2Int point, int N)
     {
+        if (N < 1 || N > 9) throw new System.ArgumentException(nameof(N), "N should be between 1 and 9");
         // Array where we will store potential candidates for top 3 closest cells
         int CHECKED_GRID_SQUARES = 9;
         var ordering = new (float distance, VoronoiCell cell)[CHECKED_GRID_SQUARES];
@@ -173,9 +183,7 @@ public class VoronoiDiagramModel
         // Sort candidates and get top 3 with smallest distances to current point
         var comparer = Comparer<(float distance, VoronoiCell cell)>.Create((x, y) => x.distance.CompareTo(y.distance));
         System.Array.Sort(ordering, comparer);
-        first = ordering[0].cell;
-        second = ordering[1].cell;
-        third = ordering[2].cell;
+        return ordering[0..N];
     }
 
     public void GenerateRegions(bool status) => generateRegions = status;
