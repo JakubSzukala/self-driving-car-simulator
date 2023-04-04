@@ -13,6 +13,7 @@ public class VoronoiDiagramScript : MonoBehaviour
     private int mapSize;
     public int gridSize;
 
+
     private void Awake()
     {
         map = GetComponent<RawImage>();
@@ -31,7 +32,8 @@ public class VoronoiDiagramScript : MonoBehaviour
     {
         vModel.GridSize = gridSize;
         vModel.GenerateRootPoints();
-        vModel.GenerateRegions();
+        vModel.GenerateRegions(true);
+        vModel.Process();
 
         Texture2D targetTexture;
         targetTexture = new Texture2D(mapSize, mapSize);
@@ -49,8 +51,18 @@ public class VoronoiDiagramModel
     private int _mapSize = 100;
     private int _gridSize = 10;
     private int pxPerGridSqr;
+
+    // Calculation parameters settings
+    private bool generateRegions = false;
+    private bool generateEdges = false;
+    private bool generateVertices = false;
+
+    // Properties
     public VoronoiCell[,] Cells
     { get; private set; }
+
+    public float Epsilon
+    { get; set; }
 
     public int MapSize
     {
@@ -82,6 +94,7 @@ public class VoronoiDiagramModel
         this._mapSize = mapSize;
         this._gridSize = gridSize;
         this.pxPerGridSqr = MapSize / GridSize;
+        this.Epsilon = 1;
     }
 
     public void GenerateRootPoints()
@@ -100,50 +113,76 @@ public class VoronoiDiagramModel
         }
     }
 
-    public void GenerateRegions()
+    public void Process()
     {
         for (int i = 0; i < MapSize; i++)
         {
             for (int j = 0; j < MapSize; j++)
             {
-                // Get grid square indexes of current point on a plane
-                int cgsqrX = i / pxPerGridSqr;
-                int cgsqrY = j / pxPerGridSqr;
-                float smallestDistance = Mathf.Infinity;
-                VoronoiCell closestCell = new VoronoiCell();
+                VoronoiCell first = new VoronoiCell();
+                VoronoiCell second = new VoronoiCell();
+                VoronoiCell third = new VoronoiCell();
+                Get3ClosestCells(new Vector2Int(i, j), ref first, ref second, ref third);
 
-                // We only need to check neighboring grid squares for closest root point
-                for (int a = -1; a < 2; a++)
+                if (generateRegions)
                 {
-                    for (int b = -1; b < 2; b++)
-                    {
-                        // Neighboring grid square idx
-                        int neighGridIdxX = cgsqrX + a;
-                        int neighGridIdxY = cgsqrY + b;
-                        if(
-                            neighGridIdxX >= 0
-                            && neighGridIdxY >= 0
-                            && neighGridIdxX < GridSize
-                            && neighGridIdxY < GridSize
-                            )
-                        {
-                            // Get reference to corresponding cell
-                            VoronoiCell neighCell = Cells[neighGridIdxX, neighGridIdxY];
-
-                            // Calculate distance between current point on a plane and rootPoint of checked cell
-                            float distance = Vector2Int.Distance(new Vector2Int(i, j), neighCell.RootPoint);
-                            if(distance < smallestDistance)
-                            {
-                                smallestDistance = distance;
-                                closestCell = neighCell;
-                            }
-                        }
-                    }
+                    first.Region.Add(new Vector2Int(i, j));
                 }
-                closestCell.Region.Add(new Vector2Int(i, j));
             }
         }
     }
+
+    public void Get3ClosestCells(Vector2Int point, ref VoronoiCell first, ref VoronoiCell second, ref VoronoiCell third)
+    {
+        // Array where we will store potential candidates for top 3 closest cells
+        int CHECKED_GRID_SQUARES = 9;
+        var ordering = new (float distance, VoronoiCell cell)[CHECKED_GRID_SQUARES];
+        int orderingIndex = -1;
+
+        // We only need to check neighboring grid squares for closest root point
+        int currentGridSqrX = point.x / pxPerGridSqr;
+        int currentGridSqrY = point.y / pxPerGridSqr;
+        for (int a = -1; a < 2; a++)
+        {
+            for (int b = -1; b < 2; b++)
+            {
+                // Neighboring grid square idx
+                int neighGridIdxX = currentGridSqrX + a;
+                int neighGridIdxY = currentGridSqrY + b;
+                orderingIndex += 1;
+                if(
+                    neighGridIdxX >= 0
+                    && neighGridIdxY >= 0
+                    && neighGridIdxX < GridSize
+                    && neighGridIdxY < GridSize
+                    )
+                {
+                    // calculate distance and add
+                    VoronoiCell neighCell = Cells[neighGridIdxX, neighGridIdxY];
+                    float distance = Vector2Int.Distance(point, neighCell.RootPoint);
+                    ordering[orderingIndex] = (distance, neighCell);
+                }
+                else // Index out of bounds
+                {
+                    // set as infinity and add
+                    ordering[orderingIndex] = (Mathf.Infinity, new VoronoiCell());
+                }
+            }
+        }
+
+        // Sort candidates and get top 3 with smallest distances to current point
+        var comparer = Comparer<(float distance, VoronoiCell cell)>.Create((x, y) => x.distance.CompareTo(y.distance));
+        System.Array.Sort(ordering, comparer);
+        first = ordering[0].cell;
+        second = ordering[1].cell;
+        third = ordering[2].cell;
+    }
+
+    public void GenerateRegions(bool status) => generateRegions = status;
+
+    public void GenerateEdges(bool status) => generateEdges = status;
+
+    public void GenerateVertices(bool status) => generateVertices = status;
 }
 
 
@@ -187,7 +226,6 @@ public class VoronoiDiagramView
             }
         }
     }
-
 
     private Color[] GenerateRandomColors(int n)
     {
