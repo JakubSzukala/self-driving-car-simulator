@@ -36,15 +36,17 @@ public class VoronoiDiagramScript : MonoBehaviour
         vModel.GenerateRootPoints();
         vModel.GenerateRegions(true);
         vModel.GenerateEdges(true);
+        vModel.GenerateVertices(true);
         vModel.Process();
 
         Texture2D targetTexture;
         targetTexture = new Texture2D(mapSize, mapSize);
         targetTexture.filterMode = FilterMode.Point;
         //vView.DrawDiagramCells(vModel.Cells, vModel.MapSize, ref targetTexture);
-        //vView.DrawRegions(vModel.Cells, vModel.MapSize, ref targetTexture);
+        vView.DrawRegions(vModel.Cells, vModel.MapSize, ref targetTexture);
         vView.DrawRootPoints(vModel.Cells, vModel.MapSize, ref targetTexture, false);
         vView.DrawEdges(vModel.Cells, vModel.MapSize, ref targetTexture);
+        vView.DrawVertices(vModel.Cells, vModel.MapSize, ref targetTexture);
         map.texture = targetTexture;
     }
 }
@@ -139,6 +141,19 @@ public class VoronoiDiagramModel
                     {
                         closestNCells[0].cell.Edges.Add(new Vector2Int(i, j));
                         closestNCells[1].cell.Edges.Add(new Vector2Int(i, j));
+                    }
+                }
+
+                if (generateVertices)
+                {
+                    float difference0_1 = Mathf.Abs(closestNCells[0].distance - closestNCells[1].distance);
+                    float difference1_2 = Mathf.Abs(closestNCells[1].distance - closestNCells[2].distance);
+                    bool isVertex =  difference0_1 <= Epsilon && difference1_2 <= Epsilon;
+                    if (isVertex)
+                    {
+                        closestNCells[0].cell.Vertices.Add(new Vector2Int(i, j));
+                        closestNCells[1].cell.Vertices.Add(new Vector2Int(i, j));
+                        closestNCells[2].cell.Vertices.Add(new Vector2Int(i, j));
                     }
                 }
             }
@@ -252,6 +267,24 @@ public class VoronoiDiagramView
             for (int j = 0; j < gridSize; j++)
             {
                 foreach(Vector2Int point in cells[i, j].Edges)
+                {
+                    texture.SetPixel(point.x, point.y, color);
+                }
+            }
+        }
+        texture.Apply();
+    }
+
+    public void DrawVertices(VoronoiCell[, ] cells, int textureSize, ref Texture2D texture)
+    {
+        if (cells.GetLength(0) != cells.GetLength(1)) throw new System.ArgumentException(nameof(cells), "argument must have both dimensions equal.");
+        int gridSize = cells.GetLength(0);
+        Color color = new Color(1f, 0f, 0f);
+        for (int i = 0; i < gridSize; i++)
+        {
+            for (int j = 0; j < gridSize; j++)
+            {
+                foreach(Vector2Int point in cells[i, j].Vertices)
                 {
                     texture.SetPixel(point.x, point.y, color);
                 }
