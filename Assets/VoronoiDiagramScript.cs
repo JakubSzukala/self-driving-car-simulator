@@ -102,9 +102,9 @@ public class VoronoiDiagramModel
 
     public void GenerateRegions()
     {
-        for (int i = 0; i < GridSize; i++)
+        for (int i = 0; i < MapSize; i++)
         {
-            for (int j = 0; j < GridSize; j++)
+            for (int j = 0; j < MapSize; j++)
             {
                 // Get grid square indexes of current point on a plane
                 int cgsqrX = i / pxPerGridSqr;
