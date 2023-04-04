@@ -183,19 +183,19 @@ public class VoronoiCell : System.IEquatable<VoronoiCell>
 {
     public Vector2Int RootPoint
     { get; set; }
-    public Vector2Int[] Edges
+    public List<Vector2Int> Edges
     { get; set; }
-    public Vector2Int[] Vertices
+    public List<Vector2Int> Vertices
     { get; set; }
 
     public VoronoiCell()
     {
         this.RootPoint = new Vector2Int();
-        this.Edges = new Vector2Int[0];
-        this.Vertices = new Vector2Int[0];
+        this.Edges = new List<Vector2Int>();
+        this.Vertices = new List<Vector2Int>();
     }
 
-    public VoronoiCell(Vector2Int rootPoint, Vector2Int[] edges, Vector2Int[] vertices)
+    public VoronoiCell(Vector2Int rootPoint, List<Vector2Int> edges, List<Vector2Int> vertices)
     {
         this.RootPoint = rootPoint;
         this.Edges = edges;
