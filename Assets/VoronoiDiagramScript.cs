@@ -24,139 +24,19 @@ public class VoronoiDiagramScript : MonoBehaviour
 
     private void Start()
     {
-        vModel.GenerateRootPoints();
-        Texture2D targetTexture;
-        vView.DrawRootPoints(vModel.RootPoints, vModel.MapSize, out targetTexture);
-        map.texture = targetTexture;
-    }
-
-    /*
-    private RawImage img;
-    private int imgSize;
-    public int gridSize;
-    private int pixelsPerGridSqr;
-    private Vector2Int[, ] rootPointsPerGridSqr;
-
-
-    private void Awake()
-    {
-        img = GetComponent<RawImage>();
-        imgSize = Mathf.RoundToInt(img.GetComponent<RectTransform>().sizeDelta.x);
-    }
-
-
-    void Start()
-    {
         GenerateDiagram();
     }
 
-
     public void GenerateDiagram()
     {
-        // For conversion between pixel coords and grid square
-        pixelsPerGridSqr = (int)(imgSize / gridSize);
-
-        // Create a white background
-        Texture2D texture = new Texture2D(imgSize, imgSize);
-        texture.filterMode = FilterMode.Point;
-        for (int i = 0; i < imgSize; i++)
-        {
-            for (int j = 0; j < imgSize; j++)
-            {
-                //float clr = Random.Range(0, 1f);
-                float clr = 1f;
-                texture.SetPixel(i, j, new Color(clr, clr, clr));
-            }
-        }
-
-        // Generate and place root points
-        GenerateRootPoints();
-
-        AssignMembership(texture);
-
-        // Place a root points on the diagram
-        for (int i = 0; i < gridSize; i++)
-        {
-            for (int j = 0; j < gridSize; j++)
-            {
-                Vector2Int point = rootPointsPerGridSqr[i, j];
-                texture.SetPixel(point.x, point.y, new Color(0f, 0f, 0f));
-            }
-        }
-
-        texture.Apply(); // Copy from CPU to GPU memory to render
-        img.texture = texture;
+        vModel.GenerateRootPoints();
+        Texture2D targetTexture;
+        targetTexture = new Texture2D(mapSize, mapSize);
+        targetTexture.filterMode = FilterMode.Point;
+        vView.DrawDiagramCells(vModel.RootPoints, vModel.MapSize, ref targetTexture);
+        vView.DrawRootPoints(vModel.RootPoints, vModel.MapSize, ref targetTexture, false);
+        map.texture = targetTexture;
     }
-
-
-    private void GenerateRootPoints()
-    {
-        rootPointsPerGridSqr = new Vector2Int[gridSize, gridSize];
-        for (int i = 0; i < gridSize; i++)
-        {
-            for (int j = 0; j < gridSize; j++)
-            {
-                // Indexed by grid squares but coordinates are absolute, not relative to grid square
-                rootPointsPerGridSqr[i, j] = new Vector2Int(
-                    Random.Range(0, pixelsPerGridSqr) + (i * pixelsPerGridSqr),
-                    Random.Range(0, pixelsPerGridSqr) + (j * pixelsPerGridSqr)
-                    );
-            }
-        }
-    }
-
-
-    private Color[] GenerateColors()
-    {
-
-        Color[] rootPointsColors;
-        rootPointsColors = new Color[gridSize * gridSize];
-        for (int i = 0; i < rootPointsColors.Length; i++)
-        {
-            rootPointsColors[i] = new Color(Random.Range(0, 1f), Random.Range(0, 1f), Random.Range(0, 1f));
-        }
-        return rootPointsColors;
-    }
-
-
-    private void AssignMembership(Texture2D texture)
-    {
-
-        Color[] rootPointsColors = GenerateColors();
-        for (int i = 0; i < imgSize; i++)
-        {
-            for (int j = 0; j < imgSize; j++)
-            {
-                // Check which grid square the point is in
-                int currPtGridSqrIdxX = (int)(i / pixelsPerGridSqr);
-                int currPtGridSqrIdxY = (int)(j / pixelsPerGridSqr);
-                float smallestDistance = Mathf.Infinity;
-                Vector2Int closestRootPointGridSqrIdx = new Vector2Int();
-                for (int a = -1; a < 2; a++)
-                {
-                    for (int b = -1; b < 2; b++)
-                    {
-                        int PtGridIdxX = currPtGridSqrIdxX + a;
-                        int PtGridIdxY = currPtGridSqrIdxY + b;
-                        if(PtGridIdxX >= 0 && PtGridIdxY >= 0 && PtGridIdxX < gridSize && PtGridIdxY < gridSize)
-                        {
-                            Vector2Int rootPoint = rootPointsPerGridSqr[PtGridIdxX, PtGridIdxY];
-                            float distance = Vector2Int.Distance(new Vector2Int(i, j), rootPoint);
-                            if(distance < smallestDistance)
-                            {
-                                smallestDistance = distance;
-                                closestRootPointGridSqrIdx = new Vector2Int(PtGridIdxX, PtGridIdxY);
-                            }
-                        }
-                    }
-                }
-                // Color the point
-                Color clr = rootPointsColors[closestRootPointGridSqrIdx.y * gridSize + closestRootPointGridSqrIdx.x];
-                texture.SetPixel(i, j, clr);
-            }
-        }
-    }
-    */
 }
 
 
@@ -199,13 +79,14 @@ public class VoronoiDiagramModel
 
 public class VoronoiDiagramView
 {
-    public void DrawRootPoints(Vector2Int[,] rootPoints, int textureSize, out Texture2D texture)
+    public void DrawRootPoints(Vector2Int[,] rootPoints, int textureSize, ref Texture2D texture, bool whiteBg)
     {
-        texture = new Texture2D(textureSize, textureSize);
-        texture.filterMode = FilterMode.Point;
-        Color[] whiteBackground = new Color[textureSize * textureSize]; //{ new Color(1f, 1f, 1f) };
-        System.Array.Fill<Color>(whiteBackground, new Color(1f, 1f, 1f));
-        texture.SetPixels(0, 0, textureSize, textureSize, whiteBackground);
+        if (whiteBg)
+        {
+            Color[] whiteBackground = new Color[textureSize * textureSize];
+            System.Array.Fill<Color>(whiteBackground, new Color(1f, 1f, 1f));
+            texture.SetPixels(0, 0, textureSize, textureSize, whiteBackground);
+        }
 
         // rootPoints are indexed in a form of a grid but their coordinates are absolute
         Color blackPoints = new Color(0f, 0f, 0f);
@@ -214,6 +95,51 @@ public class VoronoiDiagramView
             for (int j = 0; j < rootPoints.GetLength(0); j++)
             {
                 texture.SetPixel(rootPoints[i, j].x, rootPoints[i, j].y, blackPoints);
+            }
+        }
+        texture.Apply();
+    }
+
+
+    public void DrawDiagramCells(Vector2Int[, ] rootPoints, int textureSize, ref Texture2D texture)
+    {
+        int gridSize = rootPoints.GetLength(0);
+        int pixelsPerGridSqr = textureSize / gridSize;
+        Color[] colors = GenerateRandomColors(gridSize * gridSize);
+        // Iterate over each pixel in the texture
+        for (int i = 0; i < textureSize; i++)
+        {
+            for (int j = 0; j < textureSize; j++)
+            {
+                // Get grid square indexes of current point
+                int cgsqrX = i / pixelsPerGridSqr;
+                int cgsqrY = j / pixelsPerGridSqr;
+                float smallestDistance = Mathf.Infinity;
+                Vector2Int closestRootPointGridSqrIdx = new Vector2Int();
+
+                // We only need to check neighboring grid squares for closest root point
+                for (int a = -1; a < 2; a++)
+                {
+                    for (int b = -1; b < 2; b++)
+                    {
+                        // Neighboring grid square
+                        int neighGridIdxX = cgsqrX + a;
+                        int neighGridIdxY = cgsqrY + b;
+                        if(neighGridIdxX >= 0 && neighGridIdxY >= 0 && neighGridIdxX < gridSize && neighGridIdxY < gridSize)
+                        {
+                            // Point belonging to that neighboring grid square
+                            Vector2Int rootPoint = rootPoints[neighGridIdxX, neighGridIdxY];
+                            float distance = Vector2Int.Distance(new Vector2Int(i, j), rootPoint);
+                            if(distance < smallestDistance)
+                            {
+                                smallestDistance = distance;
+                                closestRootPointGridSqrIdx = new Vector2Int(neighGridIdxX, neighGridIdxY);
+                            }
+                        }
+                    }
+                }
+                Color clr = colors[closestRootPointGridSqrIdx.y * gridSize + closestRootPointGridSqrIdx.x];
+                texture.SetPixel(i, j, clr);
             }
         }
         texture.Apply();
