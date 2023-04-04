@@ -29,6 +29,7 @@ public class VoronoiDiagramScript : MonoBehaviour
         vView.DrawRootPoints(vModel.RootPoints, vModel.MapSize, out targetTexture);
         map.texture = targetTexture;
     }
+
     /*
     private RawImage img;
     private int imgSize;
@@ -216,5 +217,17 @@ public class VoronoiDiagramView
             }
         }
         texture.Apply();
+    }
+
+
+    private Color[] GenerateRandomColors(int n)
+    {
+        Color[] colors;
+        colors = new Color[n];
+        for (int i = 0; i < colors.Length; i++)
+        {
+            colors[i] = new Color(Random.Range(0, 1f), Random.Range(0, 1f), Random.Range(0, 1f));
+        }
+        return colors;
     }
 }
