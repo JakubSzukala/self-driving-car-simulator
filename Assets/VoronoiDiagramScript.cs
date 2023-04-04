@@ -11,7 +11,7 @@ public class VoronoiDiagramScript : MonoBehaviour
     private VoronoiDiagramView vView;
     private RawImage map;
     private int mapSize;
-    public int gridSize = 10;
+    public int gridSize;
 
     private void Awake()
     {
@@ -34,8 +34,8 @@ public class VoronoiDiagramScript : MonoBehaviour
         Texture2D targetTexture;
         targetTexture = new Texture2D(mapSize, mapSize);
         targetTexture.filterMode = FilterMode.Point;
-        vView.DrawDiagramCells(vModel.RootPoints, vModel.MapSize, ref targetTexture);
-        vView.DrawRootPoints(vModel.RootPoints, vModel.MapSize, ref targetTexture, false);
+        //vView.DrawDiagramCells(vModel.Cells, vModel.MapSize, ref targetTexture);
+        vView.DrawRootPoints(vModel.Cells, vModel.MapSize, ref targetTexture, false);
         map.texture = targetTexture;
     }
 }
@@ -43,44 +43,56 @@ public class VoronoiDiagramScript : MonoBehaviour
 
 public class VoronoiDiagramModel
 {
-    public int MapSize
+    private int _mapSize = 100;
+    private int _gridSize = 10;
+    private int pxPerGridSqr;
+    public VoronoiCell[,] Cells
     { get; private set; }
-    private int _gridSize;
+
+    public int MapSize
+    {
+        get { return _mapSize; }
+        set
+        {
+            _mapSize = value;
+            pxPerGridSqr = MapSize / GridSize;
+        }
+    }
     public int GridSize
     {
         get { return _gridSize; }
         set
         {
-            // pxPerGridSqr is tightly coupled with gridsize and hast to be updated with it
+            if (value < 1)
+                throw new System.ArgumentException(nameof(value), "Grid size cannot be < 1.");
             _gridSize = value;
             pxPerGridSqr = MapSize / GridSize;
+            Cells = new VoronoiCell[GridSize, GridSize];
+            for (int i = 0; i < GridSize; i++)
+                for (int j = 0; j < GridSize; j++)
+                    Cells[i, j] = new VoronoiCell();
         }
     }
-    private int pxPerGridSqr;
-    public Vector2Int[,] RootPoints
-    { get; private set; }
-
 
     public VoronoiDiagramModel(int mapSize, int gridSize)
     {
-        this.MapSize = mapSize;
-        this.GridSize = gridSize;
-        this.pxPerGridSqr = mapSize / gridSize;
+        this._mapSize = mapSize;
+        this._gridSize = gridSize;
+        this.pxPerGridSqr = MapSize / GridSize;
     }
-
 
     public void GenerateRootPoints()
     {
-        RootPoints = new Vector2Int[GridSize, GridSize];
         for (int i = 0; i < GridSize; i++)
         {
             for (int j = 0; j < GridSize; j++)
             {
                 // Indexed by grid squares but coordinates are absolute, not relative to grid square
-                RootPoints[i, j] = new Vector2Int(
+                Vector2Int rootPoint = new Vector2Int(
                     Random.Range(0, pxPerGridSqr) + (i * pxPerGridSqr),
                     Random.Range(0, pxPerGridSqr) + (j * pxPerGridSqr)
                     );
+                Cells[i, j].RootPoint = rootPoint;
             }
         }
     }
@@ -89,7 +101,7 @@ public class VoronoiDiagramModel
 
 public class VoronoiDiagramView
 {
-    public void DrawRootPoints(Vector2Int[,] rootPoints, int textureSize, ref Texture2D texture, bool whiteBg)
+    public void DrawRootPoints(VoronoiCell[,] cells, int textureSize, ref Texture2D texture, bool whiteBg)
     {
         if (whiteBg)
         {
@@ -100,17 +112,16 @@ public class VoronoiDiagramView
 
         // rootPoints are indexed in a form of a grid but their coordinates are absolute
         Color blackPoints = new Color(0f, 0f, 0f);
-        for (int i = 0; i < rootPoints.GetLength(0); i++)
+        for (int i = 0; i < cells.GetLength(0); i++)
         {
-            for (int j = 0; j < rootPoints.GetLength(0); j++)
+            for (int j = 0; j < cells.GetLength(0); j++)
             {
-                texture.SetPixel(rootPoints[i, j].x, rootPoints[i, j].y, blackPoints);
+                texture.SetPixel(cells[i, j].RootPoint.x, cells[i, j].RootPoint.y, blackPoints);
             }
         }
         texture.Apply();
     }
-
-
+    /*
     public void DrawDiagramCells(Vector2Int[, ] rootPoints, int textureSize, ref Texture2D texture)
     {
         int gridSize = rootPoints.GetLength(0);
@@ -153,8 +164,7 @@ public class VoronoiDiagramView
             }
         }
         texture.Apply();
-    }
-
+    }*/
 
     private Color[] GenerateRandomColors(int n)
     {
@@ -165,5 +175,43 @@ public class VoronoiDiagramView
             colors[i] = new Color(Random.Range(0, 1f), Random.Range(0, 1f), Random.Range(0, 1f));
         }
         return colors;
+    }
+}
+
+
+public class VoronoiCell : System.IEquatable<VoronoiCell>
+{
+    public Vector2Int RootPoint
+    { get; set; }
+    public Vector2Int[] Edges
+    { get; set; }
+    public Vector2Int[] Vertices
+    { get; set; }
+
+    public VoronoiCell()
+    {
+        this.RootPoint = new Vector2Int();
+        this.Edges = new Vector2Int[0];
+        this.Vertices = new Vector2Int[0];
+    }
+
+    public VoronoiCell(Vector2Int rootPoint, Vector2Int[] edges, Vector2Int[] vertices)
+    {
+        this.RootPoint = rootPoint;
+        this.Edges = edges;
+        this.Vertices = vertices;
+    }
+
+    public bool Equals(VoronoiCell other)
+    {
+        if (other == null)
+        {
+            return false;
+        }
+        if (this.RootPoint == other.RootPoint)
+        {
+            return true;
+        }
+        else return false;
     }
 }
