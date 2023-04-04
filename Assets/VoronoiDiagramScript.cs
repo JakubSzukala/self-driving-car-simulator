@@ -12,6 +12,7 @@ public class VoronoiDiagramScript : MonoBehaviour
     private RawImage map;
     private int mapSize;
     public int gridSize;
+    public float epsilon;
 
 
     private void Awake()
@@ -31,16 +32,19 @@ public class VoronoiDiagramScript : MonoBehaviour
     public void GenerateDiagram()
     {
         vModel.GridSize = gridSize;
+        vModel.Epsilon = epsilon;
         vModel.GenerateRootPoints();
         vModel.GenerateRegions(true);
+        vModel.GenerateEdges(true);
         vModel.Process();
 
         Texture2D targetTexture;
         targetTexture = new Texture2D(mapSize, mapSize);
         targetTexture.filterMode = FilterMode.Point;
         //vView.DrawDiagramCells(vModel.Cells, vModel.MapSize, ref targetTexture);
-        vView.DrawRegions(vModel.Cells, vModel.MapSize, ref targetTexture);
+        //vView.DrawRegions(vModel.Cells, vModel.MapSize, ref targetTexture);
         vView.DrawRootPoints(vModel.Cells, vModel.MapSize, ref targetTexture, false);
+        vView.DrawEdges(vModel.Cells, vModel.MapSize, ref targetTexture);
         map.texture = targetTexture;
     }
 }
@@ -130,7 +134,7 @@ public class VoronoiDiagramModel
 
                 if (generateEdges)
                 {
-                    bool isEdge = Mathf.Abs(closestNCells[0].distance - closestNCells[1].distance) < Epsilon;
+                    bool isEdge = Mathf.Abs(closestNCells[0].distance - closestNCells[1].distance) <= Epsilon;
                     if (isEdge)
                     {
                         closestNCells[0].cell.Edges.Add(new Vector2Int(i, j));
@@ -198,6 +202,7 @@ public class VoronoiDiagramView
 {
     public void DrawRootPoints(VoronoiCell[,] cells, int textureSize, ref Texture2D texture, bool whiteBg)
     {
+        if (cells.GetLength(0) != cells.GetLength(1)) throw new System.ArgumentException(nameof(cells), "argument must have both dimensions equal.");
         if (whiteBg)
         {
             Color[] whiteBackground = new Color[textureSize * textureSize];
@@ -233,6 +238,26 @@ public class VoronoiDiagramView
                 }
             }
         }
+        texture.Apply();
+    }
+
+    public void DrawEdges(VoronoiCell[, ] cells, int textureSize, ref Texture2D texture)
+    {
+        if (cells.GetLength(0) != cells.GetLength(1)) throw new System.ArgumentException(nameof(cells), "argument must have both dimensions equal.");
+        int gridSize = cells.GetLength(0);
+        Color color = new Color(1f, 1f, 1f);
+        for (int i = 0; i < gridSize; i++)
+        {
+            for (int j = 0; j < gridSize; j++)
+            {
+                Debug.Log(cells[i, j].Edges.Capacity);
+                foreach(Vector2Int point in cells[i, j].Edges)
+                {
+                    texture.SetPixel(point.x, point.y, color);
+                }
+            }
+        }
+        texture.Apply();
     }
 
     private Color[] GenerateRandomColors(int n)
