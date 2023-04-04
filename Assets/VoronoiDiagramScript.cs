@@ -31,10 +31,13 @@ public class VoronoiDiagramScript : MonoBehaviour
     {
         vModel.GridSize = gridSize;
         vModel.GenerateRootPoints();
+        vModel.GenerateRegions();
+
         Texture2D targetTexture;
         targetTexture = new Texture2D(mapSize, mapSize);
         targetTexture.filterMode = FilterMode.Point;
         //vView.DrawDiagramCells(vModel.Cells, vModel.MapSize, ref targetTexture);
+        vView.DrawRegions(vModel.Cells, vModel.MapSize, ref targetTexture);
         vView.DrawRootPoints(vModel.Cells, vModel.MapSize, ref targetTexture, false);
         map.texture = targetTexture;
     }
@@ -165,6 +168,24 @@ public class VoronoiDiagramView
             }
         }
         texture.Apply();
+    }
+
+    public void DrawRegions(VoronoiCell[, ] cells, int textureSize, ref Texture2D texture)
+    {
+        if (cells.GetLength(0) != cells.GetLength(1)) throw new System.ArgumentException(nameof(cells), "argument must have both dimensions equal.");
+        int gridSize = cells.GetLength(0);
+        Color[] colors = GenerateRandomColors(gridSize * gridSize);
+        for (int i = 0; i < gridSize; i++)
+        {
+            for (int j = 0; j < gridSize; j++)
+            {
+                Color clr = colors[j * gridSize + i];
+                foreach(Vector2Int point in cells[i, j].Region)
+                {
+                    texture.SetPixel(point.x, point.y, clr);
+                }
+            }
+        }
     }
 
     /*
