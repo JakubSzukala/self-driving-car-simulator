@@ -96,6 +96,51 @@ public class VoronoiDiagramModel
             }
         }
     }
+
+    public void GenerateRegions()
+    {
+        for (int i = 0; i < GridSize; i++)
+        {
+            for (int j = 0; j < GridSize; j++)
+            {
+                // Get grid square indexes of current point on a plane
+                int cgsqrX = i / pxPerGridSqr;
+                int cgsqrY = j / pxPerGridSqr;
+                float smallestDistance = Mathf.Infinity;
+                VoronoiCell closestCell = new VoronoiCell();
+
+                // We only need to check neighboring grid squares for closest root point
+                for (int a = -1; a < 2; a++)
+                {
+                    for (int b = -1; b < 2; b++)
+                    {
+                        // Neighboring grid square idx
+                        int neighGridIdxX = cgsqrX + a;
+                        int neighGridIdxY = cgsqrY + b;
+                        if(
+                            neighGridIdxX >= 0
+                            && neighGridIdxY >= 0
+                            && neighGridIdxX < GridSize
+                            && neighGridIdxY < GridSize
+                            )
+                        {
+                            // Get reference to corresponding cell
+                            VoronoiCell neighCell = Cells[neighGridIdxX, neighGridIdxY];
+
+                            // Calculate distance between current point on a plane and rootPoint of checked cell
+                            float distance = Vector2Int.Distance(new Vector2Int(i, j), neighCell.RootPoint);
+                            if(distance < smallestDistance)
+                            {
+                                smallestDistance = distance;
+                                closestCell = neighCell;
+                            }
+                        }
+                    }
+                }
+                closestCell.Region.Add(new Vector2Int(i, j));
+            }
+        }
+    }
 }
 
 
@@ -121,6 +166,7 @@ public class VoronoiDiagramView
         }
         texture.Apply();
     }
+
     /*
     public void DrawDiagramCells(Vector2Int[, ] rootPoints, int textureSize, ref Texture2D texture)
     {
@@ -183,6 +229,8 @@ public class VoronoiCell : System.IEquatable<VoronoiCell>
 {
     public Vector2Int RootPoint
     { get; set; }
+    public List<Vector2Int> Region
+    { get; set; }
     public List<Vector2Int> Edges
     { get; set; }
     public List<Vector2Int> Vertices
@@ -191,13 +239,15 @@ public class VoronoiCell : System.IEquatable<VoronoiCell>
     public VoronoiCell()
     {
         this.RootPoint = new Vector2Int();
+        this.Region = new List<Vector2Int>();
         this.Edges = new List<Vector2Int>();
         this.Vertices = new List<Vector2Int>();
     }
 
-    public VoronoiCell(Vector2Int rootPoint, List<Vector2Int> edges, List<Vector2Int> vertices)
+    public VoronoiCell(Vector2Int rootPoint, List<Vector2Int> region, List<Vector2Int> edges, List<Vector2Int> vertices)
     {
         this.RootPoint = rootPoint;
+        this.Region = region;
         this.Edges = edges;
         this.Vertices = vertices;
     }
