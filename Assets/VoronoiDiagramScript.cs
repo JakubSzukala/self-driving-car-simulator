@@ -29,6 +29,7 @@ public class VoronoiDiagramScript : MonoBehaviour
 
     public void GenerateDiagram()
     {
+        vModel.GridSize = gridSize;
         vModel.GenerateRootPoints();
         Texture2D targetTexture;
         targetTexture = new Texture2D(mapSize, mapSize);
@@ -44,8 +45,17 @@ public class VoronoiDiagramModel
 {
     public int MapSize
     { get; private set; }
+    private int _gridSize;
     public int GridSize
-    { get; private set; }
+    {
+        get { return _gridSize; }
+        set
+        {
+            // pxPerGridSqr is tightly coupled with gridsize and hast to be updated with it
+            _gridSize = value;
+            pxPerGridSqr = MapSize / GridSize;
+        }
+    }
     private int pxPerGridSqr;
     public Vector2Int[,] RootPoints
     { get; private set; }
