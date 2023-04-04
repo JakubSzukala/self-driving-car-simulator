@@ -203,6 +203,7 @@ public class VoronoiDiagramView
     public void DrawRootPoints(VoronoiCell[,] cells, int textureSize, ref Texture2D texture, bool whiteBg)
     {
         if (cells.GetLength(0) != cells.GetLength(1)) throw new System.ArgumentException(nameof(cells), "argument must have both dimensions equal.");
+        int gridSize = cells.GetLength(0);
         if (whiteBg)
         {
             Color[] whiteBackground = new Color[textureSize * textureSize];
@@ -212,9 +213,9 @@ public class VoronoiDiagramView
 
         // rootPoints are indexed in a form of a grid but their coordinates are absolute
         Color blackPoints = new Color(0f, 0f, 0f);
-        for (int i = 0; i < cells.GetLength(0); i++)
+        for (int i = 0; i < gridSize; i++)
         {
-            for (int j = 0; j < cells.GetLength(0); j++)
+            for (int j = 0; j < gridSize; j++)
             {
                 texture.SetPixel(cells[i, j].RootPoint.x, cells[i, j].RootPoint.y, blackPoints);
             }
@@ -245,12 +246,11 @@ public class VoronoiDiagramView
     {
         if (cells.GetLength(0) != cells.GetLength(1)) throw new System.ArgumentException(nameof(cells), "argument must have both dimensions equal.");
         int gridSize = cells.GetLength(0);
-        Color color = new Color(1f, 1f, 1f);
+        Color color = new Color(0f, 0f, 0f);
         for (int i = 0; i < gridSize; i++)
         {
             for (int j = 0; j < gridSize; j++)
             {
-                Debug.Log(cells[i, j].Edges.Capacity);
                 foreach(Vector2Int point in cells[i, j].Edges)
                 {
                     texture.SetPixel(point.x, point.y, color);
