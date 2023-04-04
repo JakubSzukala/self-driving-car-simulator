@@ -188,50 +188,6 @@ public class VoronoiDiagramView
         }
     }
 
-    /*
-    public void DrawDiagramCells(Vector2Int[, ] rootPoints, int textureSize, ref Texture2D texture)
-    {
-        int gridSize = rootPoints.GetLength(0);
-        int pixelsPerGridSqr = textureSize / gridSize;
-        Color[] colors = GenerateRandomColors(gridSize * gridSize);
-        // Iterate over each pixel in the texture
-        for (int i = 0; i < textureSize; i++)
-        {
-            for (int j = 0; j < textureSize; j++)
-            {
-                // Get grid square indexes of current point
-                int cgsqrX = i / pixelsPerGridSqr;
-                int cgsqrY = j / pixelsPerGridSqr;
-                float smallestDistance = Mathf.Infinity;
-                Vector2Int closestRootPointGridSqrIdx = new Vector2Int();
-
-                // We only need to check neighboring grid squares for closest root point
-                for (int a = -1; a < 2; a++)
-                {
-                    for (int b = -1; b < 2; b++)
-                    {
-                        // Neighboring grid square
-                        int neighGridIdxX = cgsqrX + a;
-                        int neighGridIdxY = cgsqrY + b;
-                        if(neighGridIdxX >= 0 && neighGridIdxY >= 0 && neighGridIdxX < gridSize && neighGridIdxY < gridSize)
-                        {
-                            // Point belonging to that neighboring grid square
-                            Vector2Int rootPoint = rootPoints[neighGridIdxX, neighGridIdxY];
-                            float distance = Vector2Int.Distance(new Vector2Int(i, j), rootPoint);
-                            if(distance < smallestDistance)
-                            {
-                                smallestDistance = distance;
-                                closestRootPointGridSqrIdx = new Vector2Int(neighGridIdxX, neighGridIdxY);
-                            }
-                        }
-                    }
-                }
-                Color clr = colors[closestRootPointGridSqrIdx.y * gridSize + closestRootPointGridSqrIdx.x];
-                texture.SetPixel(i, j, clr);
-            }
-        }
-        texture.Apply();
-    }*/
 
     private Color[] GenerateRandomColors(int n)
     {
