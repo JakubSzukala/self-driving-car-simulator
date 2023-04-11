@@ -59,20 +59,20 @@ public class RaceTrackGeneratorModel
     {
         this.rangeX = rangeX;
         this.rangeY = rangeY;
-        points = GenerateRandomPoints(numberOfPoints);
+        GenerateRandomPoints(numberOfPoints);
     }
 
     public void GenerateTrack()
     {
-        points = GenerateRandomPoints(numberOfPoints);
+        GenerateRandomPoints(numberOfPoints);
     }
 
-    private Vector2[] GenerateRandomPoints(int numberOfPoints)
+    private void GenerateRandomPoints(int numberOfPoints)
     {
-        if(numberOfPoints < 2)
+        if(numberOfPoints < 3)
         {
             Debug.LogError("Number of points must be greater than 2");
-            return null;
+            points = null;
         }
 
         points = new Vector2[numberOfPoints];
@@ -80,8 +80,6 @@ public class RaceTrackGeneratorModel
         {
             points[i] = new Vector2(Random.Range(0, rangeX), Random.Range(0, rangeY));
         }
-
-        return points;
     }
 }
 
