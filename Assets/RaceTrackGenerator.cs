@@ -13,6 +13,7 @@ public class RaceTrackGenerator : MonoBehaviour
     private RawImage map;
     [SerializeField] public int mapSizeX = 100;
     [SerializeField] public int mapSizeY = 100;
+    [SerializeField] public int numberOfPoints = 3;
 
     void Start()
     {
@@ -37,6 +38,7 @@ public class RaceTrackGenerator : MonoBehaviour
     {
         // Track generation
         model.GenerateTrack();
+        model.numberOfPoints = numberOfPoints;
 
         // Views update
         Texture2D texture = new Texture2D(mapSizeX, mapSizeY);
@@ -50,7 +52,7 @@ public class RaceTrackGenerator : MonoBehaviour
 
 public class RaceTrackGeneratorModel
 {
-    [SerializeField] public int numberOfPoints = 3;
+    public int numberOfPoints = 3;
     public Vector2[] points;
     private int rangeX;
     private int rangeY;
@@ -80,6 +82,11 @@ public class RaceTrackGeneratorModel
         {
             points[i] = new Vector2(Random.Range(0, rangeX), Random.Range(0, rangeY));
         }
+    }
+
+    private void GenerateConvexHull()
+    {
+        
     }
 }
 
