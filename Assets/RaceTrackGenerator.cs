@@ -35,9 +35,12 @@ public class RaceTrackGenerator : MonoBehaviour
     {
         // Track generation
         model.numberOfPoints = numberOfPoints;
+        model.rangeX = mapSizeX;
+        model.rangeY = mapSizeY;
         model.GenerateTrack();
 
         // Draw points directly to the texture
+        texture.Reinitialize(mapSizeX, mapSizeY);
         view.TextureFillWhite(ref texture);
         view.TextureDrawConvexHull(model.convexHull, ref texture);
         view.TextureDrawPoints(model.points, ref texture);
@@ -57,11 +60,16 @@ public class RaceTrackGeneratorModel
     public int numberOfPoints = 3; // TODO: Convert to property
     public Vector2[] points; // TODO: Convert to property
     public List<Vector2> convexHull; // TODO: Convert to property
-    private int rangeX;
-    private int rangeY;
+    public int rangeX;
+    public int rangeY;
 
     public RaceTrackGeneratorModel(int rangeX, int rangeY, int numberOfPoints)
     {
+        if (rangeX < 1 || rangeY < 1 || numberOfPoints < 3)
+        {
+            throw new System.ArgumentException("Invalid model arguments.");
+        }
+
         this.rangeX = rangeX;
         this.rangeY = rangeY;
         this.numberOfPoints = numberOfPoints;
@@ -78,8 +86,7 @@ public class RaceTrackGeneratorModel
     {
         if(numberOfPoints < 3)
         {
-            Debug.LogError("Number of points must be greater than 2");
-            points = null;
+            throw new System.ArgumentException("Invalid number of points.");
         }
 
         points = new Vector2[numberOfPoints];
@@ -94,6 +101,11 @@ public class RaceTrackGeneratorModel
 
     private void GenerateConvexHull()
     {
+        if (points == null || points.Length < 3)
+        {
+            throw new System.ArgumentException("Invalid fields values.");
+        }
+
         // Find the leftmost point, it is guaranteed to be on the hull
         convexHull = new List<Vector2>();
         int mostLeftPointIdx = 0;
@@ -149,6 +161,11 @@ public class RaceTrackGeneratorView
 
     public void TextureFillWhite(ref Texture2D texture)
     {
+        if (texture == null)
+        {
+            throw new System.ArgumentException("Texture is null.");
+        }
+
         Color[] background = new Color[texture.width * texture.height];
         System.Array.Fill<Color>(background, Color.white);
         texture.SetPixels(0, 0, texture.width, texture.height, background);
@@ -157,6 +174,11 @@ public class RaceTrackGeneratorView
 
     public void TextureDrawPoints(Vector2[] points, ref Texture2D texture)
     {
+        if (points == null || points.Length < 1 || texture == null)
+        {
+            throw new System.ArgumentException("Invalid arguments.");
+        }
+
         for (int i = 0; i < points.Length; i++)
         {
             texture.SetPixel((int)points[i].x, (int)points[i].y, drawColor);
