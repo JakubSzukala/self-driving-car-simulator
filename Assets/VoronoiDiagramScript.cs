@@ -45,7 +45,7 @@ public class VoronoiDiagramScript : MonoBehaviour
         //vView.DrawDiagramCells(vModel.Cells, vModel.MapSize, ref targetTexture);
         vView.DrawRegions(vModel.Cells, vModel.MapSize, ref targetTexture);
         vView.DrawRootPoints(vModel.Cells, vModel.MapSize, ref targetTexture, false);
-        vView.DrawEdges(vModel.Cells, vModel.MapSize, ref targetTexture);
+        //vView.DrawEdges(vModel.Cells, vModel.MapSize, ref targetTexture);
         vView.DrawVertices(vModel.Cells, vModel.MapSize, ref targetTexture);
         map.texture = targetTexture;
     }
@@ -100,7 +100,7 @@ public class VoronoiDiagramModel
         this._mapSize = mapSize;
         this._gridSize = gridSize;
         this.pxPerGridSqr = MapSize / GridSize;
-        this.Epsilon = 1;
+        this.Epsilon = 1f;
     }
 
     public void GenerateRootPoints()
@@ -136,7 +136,7 @@ public class VoronoiDiagramModel
 
                 if (generateEdges)
                 {
-                    bool isEdge = Mathf.Abs(closestNCells[0].distance - closestNCells[1].distance) <= Epsilon;
+                    bool isEdge = Mathf.Abs(closestNCells[0].distance - closestNCells[1].distance) < Epsilon;
                     if (isEdge)
                     {
                         closestNCells[0].cell.Edges.Add(new Vector2Int(i, j));
