@@ -21,7 +21,7 @@ public class RaceTrackGenerator : MonoBehaviour
     {
         // Create refs
         model = new RaceTrackGeneratorModel(mapSizeX, mapSizeY, numberOfPoints);
-        view = new RaceTrackGeneratorView();
+        view = new RaceTrackGeneratorView(Color.green);
         map = GetComponent<RawImage>();
 
         // Create texture with proper filter
@@ -35,11 +35,6 @@ public class RaceTrackGenerator : MonoBehaviour
 
         // Set the final result
         map.texture = texture;
-    }
-
-    void Update()
-    {
-
     }
 
     public void OnClick()
@@ -145,7 +140,14 @@ public class RaceTrackGeneratorModel
 
 public class RaceTrackGeneratorView
 {
-    // TODO: Create a color property and refer to it when drawing
+    Color drawColor
+    { get; set; }
+
+    public RaceTrackGeneratorView(Color drawColor = default(Color))
+    {
+        this.drawColor = drawColor;
+    }
+
     public void TextureFillWhite(ref Texture2D texture)
     {
         Color[] background = new Color[texture.width * texture.height];
@@ -158,7 +160,7 @@ public class RaceTrackGeneratorView
     {
         for (int i = 0; i < points.Length; i++)
         {
-            texture.SetPixel((int)points[i].x, (int)points[i].y, Color.red);
+            texture.SetPixel((int)points[i].x, (int)points[i].y, drawColor);
         }
         texture.Apply();
     }
@@ -166,13 +168,13 @@ public class RaceTrackGeneratorView
     public void TextureDrawConvexHull(List<Vector2> points, ref Texture2D texture)
     {
         float frac = 1f / points.Count;
-        float bluePercentage = -frac;
+        float colorPercentage = -frac;
         for (int i = 1; i < points.Count; i++)
         {
-            bluePercentage += frac;
+            colorPercentage += frac;
             int index = i % (points.Count - 1);
             int prevIndex = (i - 1) % (points.Count - 1);
-            Color color = new Color(0f, 0f, bluePercentage);
+            Color color = Color.Lerp(Color.black, drawColor, colorPercentage);
             DrawLine(points[index], points[prevIndex], color, ref texture);
         }
         texture.Apply();
