@@ -28,16 +28,10 @@ public class RaceTrackGenerator : MonoBehaviour
         texture = new Texture2D(mapSizeX, mapSizeY);
         texture.filterMode = FilterMode.Point;
 
-        // Draw points directly to the texture
-        view.TextureFillWhite(ref texture);
-        view.TextureDrawConvexHull(model.convexHull, ref texture);
-        view.TextureDrawPoints(model.points, ref texture);
-
-        // Set the final result
-        map.texture = texture;
+        Regenerate();
     }
 
-    public void OnClick()
+    public void Regenerate()
     {
         // Track generation
         model.numberOfPoints = numberOfPoints;
@@ -50,6 +44,11 @@ public class RaceTrackGenerator : MonoBehaviour
 
         // Set the final result
         map.texture = texture;
+    }
+
+    public void OnClick()
+    {
+        Regenerate();
     }
 }
 
