@@ -29,8 +29,9 @@ public class RaceTrackGenerator : MonoBehaviour
         texture.filterMode = FilterMode.Point;
 
         // Draw points directly to the texture
-        view.DrawConvexHull(model.convexHull, ref texture, true);
-        view.TextureDrawPoints(model.points, ref texture, false);
+        view.TextureFillWhite(ref texture);
+        view.TextureDrawConvexHull(model.convexHull, ref texture);
+        view.TextureDrawPoints(model.points, ref texture);
 
         // Set the final result
         map.texture = texture;
@@ -48,8 +49,9 @@ public class RaceTrackGenerator : MonoBehaviour
         model.GenerateTrack();
 
         // Draw points directly to the texture
-        view.DrawConvexHull(model.convexHull, ref texture, true);
-        view.TextureDrawPoints(model.points, ref texture, false);
+        view.TextureFillWhite(ref texture);
+        view.TextureDrawConvexHull(model.convexHull, ref texture);
+        view.TextureDrawPoints(model.points, ref texture);
 
         // Set the final result
         map.texture = texture;
@@ -144,16 +146,16 @@ public class RaceTrackGeneratorModel
 public class RaceTrackGeneratorView
 {
     // TODO: Create a color property and refer to it when drawing
-    public void TextureDrawPoints(Vector2[] points, ref Texture2D texture, bool whiteBg)
+    public void TextureFillWhite(ref Texture2D texture)
     {
-        if (whiteBg) // TODO: Change this to Texture2D.whiteTexture
-        {
-            Color[] whiteBackground = new Color[texture.width * texture.height];
-            System.Array.Fill<Color>(whiteBackground, new Color(1f, 1f, 1f));
-            texture.SetPixels(0, 0, texture.width, texture.height, whiteBackground);
-            texture.Apply();
-        }
+        Color[] background = new Color[texture.width * texture.height];
+        System.Array.Fill<Color>(background, Color.white);
+        texture.SetPixels(0, 0, texture.width, texture.height, background);
+        texture.Apply();
+    }
 
+    public void TextureDrawPoints(Vector2[] points, ref Texture2D texture)
+    {
         for (int i = 0; i < points.Length; i++)
         {
             texture.SetPixel((int)points[i].x, (int)points[i].y, Color.red);
@@ -161,16 +163,8 @@ public class RaceTrackGeneratorView
         texture.Apply();
     }
 
-    public void DrawConvexHull(List<Vector2> points, ref Texture2D texture, bool whiteBg)
+    public void TextureDrawConvexHull(List<Vector2> points, ref Texture2D texture)
     {
-        if(whiteBg)
-        {
-            Color[] whiteBackground = new Color[texture.width * texture.height];
-            System.Array.Fill<Color>(whiteBackground, new Color(1f, 1f, 1f));
-            texture.SetPixels(0, 0, texture.width, texture.height, whiteBackground);
-            texture.Apply();
-        }
-
         float frac = 1f / points.Count;
         float bluePercentage = -frac;
         for (int i = 1; i < points.Count; i++)
