@@ -42,7 +42,8 @@ public class RaceTrackGenerator : MonoBehaviour
         // Draw points directly to the texture
         texture.Reinitialize(mapSizeX, mapSizeY);
         view.TextureFillWhite(ref texture);
-        view.TextureDrawConvexHull(model.convexHull, ref texture);
+        //view.TextureDrawHull(model.convexHull, ref texture);
+        view.TextureDrawHull(model.concaveHull, ref texture);
         view.TextureDrawPoints(model.points, ref texture);
 
         // Set the final result
@@ -60,6 +61,7 @@ public class RaceTrackGeneratorModel
     public int numberOfPoints = 3; // TODO: Convert to property
     public Vector2[] points; // TODO: Convert to property
     public List<Vector2> convexHull; // TODO: Convert to property
+    public List<Vector2> concaveHull; // TODO: Convert to property
     public int rangeX;
     public int rangeY;
 
@@ -80,6 +82,7 @@ public class RaceTrackGeneratorModel
     {
         GenerateRandomPoints(numberOfPoints);
         GenerateConvexHull();
+        ConvexToConcave(0.5f);
     }
 
     private void GenerateRandomPoints(int numberOfPoints)
@@ -146,6 +149,66 @@ public class RaceTrackGeneratorModel
             currentHullPointIdx = smallestAnglePointIdx;
         } while (currentHullPointIdx != mostLeftPointIdx && counter < points.Length);
     }
+
+    public void ConvexToConcave(float probability)
+    {
+        if (probability < 0f || probability > 1f)
+        {
+            throw new System.ArgumentException("Invalid probability value.");
+        }
+        concaveHull = new List<Vector2>();
+
+        // Calculate center of mass of a convex hull
+        Vector2 accumulate = Vector2.zero;
+        foreach(var point in convexHull)
+        {
+            accumulate += point;
+        }
+        // Lower bound is the center of mass
+        Vector2 innerBound = accumulate / convexHull.Count;
+
+        // For randomly picked points on the hull displace them towards or against center of mass
+        float seed = Random.Range(0f, 1f);
+        float percentile;
+        for(int i = 0; i < convexHull.Count; i++)
+        {
+            if(seed < probability) // Displace a point
+            {
+                // Clamp gaussian distribution
+                do
+                {
+                    percentile = DrawFromGaussian(1f, 0.5f);
+                }
+                while (percentile < 0f || percentile > 1f);
+
+                // Lerp between inner and outer bound with percentile drawn from normal distribution
+                Vector2 outerBound = convexHull[i] + (convexHull[i] - innerBound);
+                concaveHull.Add(Vector2.Lerp(innerBound, outerBound, percentile));
+            }
+            else // Do not displace a point
+            {
+                concaveHull.Add(convexHull[i]);
+            }
+        }
+    }
+
+    private float DrawFromGaussian(float stdDev, float mean)
+    {
+        float v1, v2, s;
+        do
+        {
+            // Draw two random numbers from a uniform distribution
+            v1 = 2f * Random.Range(0f, 1f) - 1f;
+            v2 = 2f * Random.Range(0f, 1f) - 1f;
+
+            // Check if they are within the unit circle
+            s = v1 * v1 + v2 * v2;
+        } while (s >= 1 || s == 0);
+
+        // https://en.wikipedia.org/wiki/Marsaglia_polar_method
+        s = Mathf.Sqrt((-2f * Mathf.Log(s)) / s);
+        return stdDev * v1 * s + mean;
+    }
 }
 
 
@@ -186,7 +249,7 @@ public class RaceTrackGeneratorView
         texture.Apply();
     }
 
-    public void TextureDrawConvexHull(List<Vector2> points, ref Texture2D texture)
+    public void TextureDrawHull(List<Vector2> points, ref Texture2D texture)
     {
         float frac = 1f / points.Count;
         float colorPercentage = -frac;
