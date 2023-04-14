@@ -168,10 +168,10 @@ public class RaceTrackGeneratorModel
         Vector2 innerBound = accumulate / convexHull.Count;
 
         // For randomly picked points on the hull displace them towards or against center of mass
-        float seed = Random.Range(0f, 1f);
         float percentile;
         for(int i = 0; i < convexHull.Count; i++)
         {
+            float seed = Random.Range(0f, 1f);
             if(seed < probability) // Displace a point
             {
                 // Clamp gaussian distribution
@@ -182,7 +182,7 @@ public class RaceTrackGeneratorModel
                 while (percentile < 0f || percentile > 1f);
 
                 // Lerp between inner and outer bound with percentile drawn from normal distribution
-                Vector2 outerBound = convexHull[i] + (convexHull[i] - innerBound);
+                Vector2 outerBound = convexHull[i];
                 concaveHull.Add(Vector2.Lerp(innerBound, outerBound, percentile));
             }
             else // Do not displace a point
