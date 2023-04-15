@@ -42,9 +42,24 @@ public class RaceTrackGenerator : MonoBehaviour
         // Draw points directly to the texture
         texture.Reinitialize(mapSizeX, mapSizeY);
         view.TextureFillWhite(ref texture);
-        //view.TextureDrawHull(model.convexHull, ref texture);
+        view.drawColor = Color.cyan;
+        view.TextureDrawHull(model.convexHull, ref texture);
+        view.drawColor = Color.red;
+        view.TextureDrawPoints(model.convexHull, ref texture);
+        for (int i = 0; i < model.convexHull.Count; i++)
+        {
+            Debug.Log($"Point index: {i}, point: {model.convexHull[i]}");
+        }
+        /*
+        view.drawColor = Color.blue;
         view.TextureDrawHull(model.concaveHull, ref texture);
-        view.TextureDrawPoints(model.points, ref texture);
+        view.drawColor = Color.green;
+        view.TextureDrawPoints(model.vertices, ref texture);
+        view.drawColor = Color.red;
+        view.TextureDrawPoints(model.concaveHull, ref texture);
+        */
+
+        //view.TextureDrawHull(model.convexHull, ref texture);
 
         // Set the final result
         map.texture = texture;
@@ -62,6 +77,7 @@ public class RaceTrackGeneratorModel
     public Vector2[] points; // TODO: Convert to property
     public List<Vector2> convexHull; // TODO: Convert to property
     public List<Vector2> concaveHull; // TODO: Convert to property
+    public Vector2[] vertices;
     public int rangeX;
     public int rangeY;
 
@@ -83,6 +99,7 @@ public class RaceTrackGeneratorModel
         GenerateRandomPoints(numberOfPoints);
         GenerateConvexHull();
         ConvexToConcave(0.5f);
+        GenerateOrthogonalPoints(3f);
     }
 
     private void GenerateRandomPoints(int numberOfPoints)
@@ -102,6 +119,7 @@ public class RaceTrackGeneratorModel
         points = points.Distinct().ToArray();
     }
 
+    // TODO: Add return value indicating success
     private void GenerateConvexHull()
     {
         if (points == null || points.Length < 3)
@@ -145,9 +163,12 @@ public class RaceTrackGeneratorModel
                     smallestAnglePointDir = points[i] - points[currentHullPointIdx];
                 }
             }
+            // This condition being true indicates that all convex hull points were found
+            if (smallestAnglePointIdx == mostLeftPointIdx) break;
+
             convexHull.Add(points[smallestAnglePointIdx]);
             currentHullPointIdx = smallestAnglePointIdx;
-        } while (currentHullPointIdx != mostLeftPointIdx && counter < points.Length);
+        } while (counter < points.Length);
     }
 
     public void ConvexToConcave(float probability)
@@ -167,7 +188,7 @@ public class RaceTrackGeneratorModel
         // Lower bound is the center of mass
         Vector2 innerBound = accumulate / convexHull.Count;
 
-        // For randomly picked points on the hull displace them towards or against center of mass
+        // For randomly picked points on the hull displace them towards center of mass
         float percentile;
         for(int i = 0; i < convexHull.Count; i++)
         {
@@ -189,6 +210,33 @@ public class RaceTrackGeneratorModel
             {
                 concaveHull.Add(convexHull[i]);
             }
+        }
+    }
+
+    private void GenerateOrthogonalPoints(float distance)
+    {
+        // https://www.youtube.com/watch?v=Q12sb-sOhdI&list=PLFt_AvWsXl0d8aDaovNztYf6iTChHzrHP&index=6
+        // For points with index > 0 take the average of directions
+        // between next and previous to make the path smoother
+        vertices = new Vector2[concaveHull.Count * 2];
+        
+        for (int i = 0; i < concaveHull.Count; i++)
+        {
+            // Overflow safe, will overflow to 0
+            int nextIndex = (i + 1) % concaveHull.Count;
+            Vector2 forward = Vector2.zero;
+            if (i > 0)
+            {
+                forward += concaveHull[i] - concaveHull[i - 1];
+            }
+            forward += concaveHull[nextIndex] - concaveHull[i];
+            forward.Normalize();
+
+            Vector2 left = new Vector2(forward.y, -forward.x) * distance;
+            Vector2 right = new Vector2(-forward.y, forward.x) * distance;
+
+            vertices[i * 2] = concaveHull[i] + left;
+            vertices[i * 2 + 1] = concaveHull[i] + right;
         }
     }
 
@@ -214,7 +262,7 @@ public class RaceTrackGeneratorModel
 
 public class RaceTrackGeneratorView
 {
-    Color drawColor
+    public Color drawColor
     { get; set; }
 
     public RaceTrackGeneratorView(Color drawColor = default(Color))
@@ -235,14 +283,14 @@ public class RaceTrackGeneratorView
         texture.Apply();
     }
 
-    public void TextureDrawPoints(Vector2[] points, ref Texture2D texture)
+    public void TextureDrawPoints(IReadOnlyList<Vector2> points, ref Texture2D texture)
     {
-        if (points == null || points.Length < 1 || texture == null)
+        if (points == null || points.Count < 1 || texture == null)
         {
             throw new System.ArgumentException("Invalid arguments.");
         }
 
-        for (int i = 0; i < points.Length; i++)
+        for (int i = 0; i < points.Count; i++)
         {
             texture.SetPixel((int)points[i].x, (int)points[i].y, drawColor);
         }
@@ -253,13 +301,12 @@ public class RaceTrackGeneratorView
     {
         float frac = 1f / points.Count;
         float colorPercentage = -frac;
-        for (int i = 1; i < points.Count; i++)
+        for (int i = 0; i < points.Count; i++)
         {
             colorPercentage += frac;
-            int index = i % (points.Count - 1);
-            int prevIndex = (i - 1) % (points.Count - 1);
+            int nextIndex = (i + 1) % points.Count;
             Color color = Color.Lerp(Color.black, drawColor, colorPercentage);
-            DrawLine(points[index], points[prevIndex], color, ref texture);
+            DrawLine(points[i], points[nextIndex], color, ref texture);
         }
         texture.Apply();
     }
