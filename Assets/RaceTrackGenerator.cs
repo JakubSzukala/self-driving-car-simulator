@@ -39,16 +39,23 @@ public class RaceTrackGenerator : MonoBehaviour
         model.rangeY = mapSizeY;
         model.GenerateTrack();
 
-        // Draw points directly to the texture
+        // Draw hull from smoothed points and then the points before smoothing
         texture.Reinitialize(mapSizeX, mapSizeY);
         view.TextureFillWhite(ref texture);
+        view.drawColor = Color.blue;
+        view.TextureDrawHull(model.smoothedPoints, ref texture);
+        view.drawColor = Color.red;
+        view.TextureDrawPoints(model.concaveHull, ref texture);
+        view.drawColor = Color.cyan;
+        view.TextureDrawPoints(model.smoothedPoints, ref texture);
+        /*
         view.drawColor = Color.blue;
         view.TextureDrawHull(model.concaveHull, ref texture);
         view.drawColor = Color.green;
         view.TextureDrawPoints(model.orthogonalPoints, ref texture);
         view.drawColor = Color.red;
         view.TextureDrawPoints(model.concaveHull, ref texture);
-
+        */
         //view.TextureDrawHull(model.convexHull, ref texture);
 
         // Set the final result

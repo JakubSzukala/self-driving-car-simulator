@@ -5,11 +5,15 @@ using System.Linq;
 
 public class RaceTrackGeneratorModel
 {
-    public int numberOfPoints = 3; // TODO: Convert to property
+    // Stored points
     public Vector2[] points; // TODO: Convert to property
     public List<Vector2> convexHull; // TODO: Convert to property
     public List<Vector2> concaveHull; // TODO: Convert to property
     public Vector2[] orthogonalPoints;
+    public Vector2[] smoothedPoints;
+
+    // Parameters
+    public int numberOfPoints = 3; // TODO: Convert to property
     public int rangeX;
     public int rangeY;
 
@@ -30,7 +34,7 @@ public class RaceTrackGeneratorModel
     {
         GenerateRandomPoints(numberOfPoints);
         GenerateConvexHull();
-        ConvexToConcave(0.5f);
+        ConvexToConcave(0.7f);
         GenerateOrthogonalPoints(3f);
     }
 
@@ -188,5 +192,16 @@ public class RaceTrackGeneratorModel
         // https://en.wikipedia.org/wiki/Marsaglia_polar_method
         s = Mathf.Sqrt((-2f * Mathf.Log(s)) / s);
         return stdDev * v1 * s + mean;
+    }
+    private void ChaikinSmoothing(IReadOnlyList<Vector2> points)
+    {
+        smoothedPoints = new Vector2[2 * points.Count];
+        for (int i = 0; i < points.Count; i++)
+        {
+            int nextIndex = (i + 1) % points.Count;
+            int prevIndex = i > 0 ? i - 1 : i - 1 + points.Count;
+            smoothedPoints[i * 2] = Vector2.Lerp(points[prevIndex], points[i], 0.75f);
+            smoothedPoints[(i * 2) + 1] = Vector2.Lerp(points[i], points[nextIndex], 0.25f);
+        }
     }
 }

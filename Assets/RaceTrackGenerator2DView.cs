@@ -39,7 +39,7 @@ public class RaceTrackGeneratorView
         texture.Apply();
     }
 
-    public void TextureDrawHull(List<Vector2> points, ref Texture2D texture)
+    public void TextureDrawHull(IReadOnlyList<Vector2> points, ref Texture2D texture)
     {
         float frac = 1f / points.Count;
         float colorPercentage = -frac;
