@@ -42,22 +42,12 @@ public class RaceTrackGenerator : MonoBehaviour
         // Draw points directly to the texture
         texture.Reinitialize(mapSizeX, mapSizeY);
         view.TextureFillWhite(ref texture);
-        view.drawColor = Color.cyan;
-        view.TextureDrawHull(model.convexHull, ref texture);
-        view.drawColor = Color.red;
-        view.TextureDrawPoints(model.convexHull, ref texture);
-        for (int i = 0; i < model.convexHull.Count; i++)
-        {
-            Debug.Log($"Point index: {i}, point: {model.convexHull[i]}");
-        }
-        /*
         view.drawColor = Color.blue;
         view.TextureDrawHull(model.concaveHull, ref texture);
         view.drawColor = Color.green;
-        view.TextureDrawPoints(model.vertices, ref texture);
+        view.TextureDrawPoints(model.orthogonalPoints, ref texture);
         view.drawColor = Color.red;
         view.TextureDrawPoints(model.concaveHull, ref texture);
-        */
 
         //view.TextureDrawHull(model.convexHull, ref texture);
 
@@ -77,7 +67,7 @@ public class RaceTrackGeneratorModel
     public Vector2[] points; // TODO: Convert to property
     public List<Vector2> convexHull; // TODO: Convert to property
     public List<Vector2> concaveHull; // TODO: Convert to property
-    public Vector2[] vertices;
+    public Vector2[] orthogonalPoints;
     public int rangeX;
     public int rangeY;
 
@@ -218,8 +208,7 @@ public class RaceTrackGeneratorModel
         // https://www.youtube.com/watch?v=Q12sb-sOhdI&list=PLFt_AvWsXl0d8aDaovNztYf6iTChHzrHP&index=6
         // For points with index > 0 take the average of directions
         // between next and previous to make the path smoother
-        vertices = new Vector2[concaveHull.Count * 2];
-        
+        orthogonalPoints = new Vector2[concaveHull.Count * 2];
         for (int i = 0; i < concaveHull.Count; i++)
         {
             // Overflow safe, will overflow to 0
@@ -235,8 +224,8 @@ public class RaceTrackGeneratorModel
             Vector2 left = new Vector2(forward.y, -forward.x) * distance;
             Vector2 right = new Vector2(-forward.y, forward.x) * distance;
 
-            vertices[i * 2] = concaveHull[i] + left;
-            vertices[i * 2 + 1] = concaveHull[i] + right;
+            orthogonalPoints[i * 2] = concaveHull[i] + left;
+            orthogonalPoints[i * 2 + 1] = concaveHull[i] + right;
         }
     }
 
