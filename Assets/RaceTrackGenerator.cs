@@ -16,6 +16,8 @@ public class RaceTrackGenerator : MonoBehaviour
     [SerializeField] public int mapSizeX = 100;
     [SerializeField] public int mapSizeY = 100;
     [SerializeField] public int numberOfPoints = 3;
+    [SerializeField] public float pointConcavityProbability = 0.7f;
+    [SerializeField] public int smoothingDegree = 1;
 
     void Start()
     {
@@ -34,9 +36,10 @@ public class RaceTrackGenerator : MonoBehaviour
     public void Regenerate()
     {
         // Track generation
-        model.rangeX = mapSizeX;
+        model.rangeX = mapSizeX; // Set range in which path will be generated
         model.rangeY = mapSizeY;
-        Vector2[] path = model.GenerateConcavePath(numberOfPoints, 0.7f, 1);
+        Vector2[] path = model.GenerateConcavePath(
+            numberOfPoints, pointConcavityProbability, smoothingDegree);
 
         // Draw hull from smoothed points and then the points before smoothing
         texture.Reinitialize(mapSizeX, mapSizeY);
