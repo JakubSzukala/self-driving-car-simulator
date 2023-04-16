@@ -36,6 +36,7 @@ public class RaceTrackGeneratorModel
         GenerateConvexHull();
         ConvexToConcave(0.7f);
         GenerateOrthogonalPoints(3f);
+        ChaikinSmoothing(concaveHull);
     }
 
     private void GenerateRandomPoints(int numberOfPoints)
@@ -195,6 +196,7 @@ public class RaceTrackGeneratorModel
     }
     private void ChaikinSmoothing(IReadOnlyList<Vector2> points)
     {
+        // http://graphics.cs.ucdavis.edu/education/CAGDNotes/Chaikins-Algorithm/Chaikins-Algorithm.html
         smoothedPoints = new Vector2[2 * points.Count];
         for (int i = 0; i < points.Count; i++)
         {

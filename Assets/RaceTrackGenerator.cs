@@ -45,9 +45,9 @@ public class RaceTrackGenerator : MonoBehaviour
         view.drawColor = Color.blue;
         view.TextureDrawHull(model.smoothedPoints, ref texture);
         view.drawColor = Color.red;
-        view.TextureDrawPoints(model.concaveHull, ref texture);
-        view.drawColor = Color.cyan;
         view.TextureDrawPoints(model.smoothedPoints, ref texture);
+        view.drawColor = Color.cyan;
+        //view.TextureDrawPoints(model.smoothedPoints, ref texture);
         /*
         view.drawColor = Color.blue;
         view.TextureDrawHull(model.concaveHull, ref texture);
