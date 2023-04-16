@@ -8,7 +8,7 @@ using UnityEngine.UI;
 [System.Serializable]
 public class RaceTrackGenerator : MonoBehaviour
 {
-    public RaceTrackGeneratorModel model;
+    public RaceTrackPathGenerator model;
     public RaceTrackGeneratorView view;
 
     private RawImage map;
@@ -20,7 +20,7 @@ public class RaceTrackGenerator : MonoBehaviour
     void Start()
     {
         // Create refs
-        model = new RaceTrackGeneratorModel(mapSizeX, mapSizeY, numberOfPoints);
+        model = new RaceTrackPathGenerator(mapSizeX, mapSizeY);
         view = new RaceTrackGeneratorView(Color.green);
         map = GetComponent<RawImage>();
 
@@ -34,18 +34,17 @@ public class RaceTrackGenerator : MonoBehaviour
     public void Regenerate()
     {
         // Track generation
-        model.numberOfPoints = numberOfPoints;
         model.rangeX = mapSizeX;
         model.rangeY = mapSizeY;
-        model.GenerateTrack();
+        Vector2[] path = model.GenerateConcavePath(numberOfPoints, 0.7f, 1);
 
         // Draw hull from smoothed points and then the points before smoothing
         texture.Reinitialize(mapSizeX, mapSizeY);
         view.TextureFillWhite(ref texture);
         view.drawColor = Color.blue;
-        view.TextureDrawHull(model.smoothedPoints, ref texture);
+        view.TextureDrawHull(path, ref texture);
         view.drawColor = Color.red;
-        view.TextureDrawPoints(model.smoothedPoints, ref texture);
+        view.TextureDrawPoints(path, ref texture);
         view.drawColor = Color.cyan;
         //view.TextureDrawPoints(model.smoothedPoints, ref texture);
         /*
