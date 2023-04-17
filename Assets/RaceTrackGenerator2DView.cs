@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(RaceTrackGenerator))]
 [RequireComponent(typeof(RawImage))]
 public class RaceTrackGenerator2DView : MonoBehaviour, IRaceTrackRenderer
 {
