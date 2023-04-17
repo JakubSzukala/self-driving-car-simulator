@@ -2,8 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RaceTrackGenerator3DView : MonoBehaviour
+public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackRenderer
 {
+    public void RenderTrack(Vector2[] path)
+    {
+        throw new System.NotImplementedException();
+    }
+
+
     // Start is called before the first frame update
     void Start()
     {

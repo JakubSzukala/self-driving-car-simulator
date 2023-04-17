@@ -9,12 +9,11 @@ using UnityEngine.UI;
 public class RaceTrackGenerator : MonoBehaviour
 {
     public RaceTrackPathGenerator model;
-    public RaceTrackGeneratorView view;
+    public IRaceTrackRenderer view;
 
-    private RawImage map;
     private Texture2D texture;
-    [SerializeField] public int mapSizeX = 100;
-    [SerializeField] public int mapSizeY = 100;
+    [SerializeField] public int rangeX = 100;
+    [SerializeField] public int rangeY = 100;
     [SerializeField] public int numberOfPoints = 3;
     [SerializeField] public float pointConcavityProbability = 0.7f;
     [SerializeField] public int smoothingDegree = 1;
@@ -22,13 +21,8 @@ public class RaceTrackGenerator : MonoBehaviour
     void Start()
     {
         // Create refs
-        model = new RaceTrackPathGenerator(mapSizeX, mapSizeY);
-        view = new RaceTrackGeneratorView(Color.green);
-        map = GetComponent<RawImage>();
-
-        // Create texture with proper filter
-        texture = new Texture2D(mapSizeX, mapSizeY);
-        texture.filterMode = FilterMode.Point;
+        model = new RaceTrackPathGenerator(rangeX, rangeY);
+        view = GetComponent<IRaceTrackRenderer>();
 
         Regenerate();
     }
@@ -36,32 +30,12 @@ public class RaceTrackGenerator : MonoBehaviour
     public void Regenerate()
     {
         // Track generation
-        model.rangeX = mapSizeX; // Set range in which path will be generated
-        model.rangeY = mapSizeY;
+        model.rangeX = rangeX; // Set range in which path will be generated
+        model.rangeY = rangeY;
         Vector2[] path = model.GenerateConcavePath(
             numberOfPoints, pointConcavityProbability, smoothingDegree);
 
-        // Draw hull from smoothed points and then the points before smoothing
-        texture.Reinitialize(mapSizeX, mapSizeY);
-        view.TextureFillWhite(ref texture);
-        view.drawColor = Color.blue;
-        view.TextureDrawHull(path, ref texture);
-        view.drawColor = Color.red;
-        view.TextureDrawPoints(path, ref texture);
-        view.drawColor = Color.cyan;
-        //view.TextureDrawPoints(model.smoothedPoints, ref texture);
-        /*
-        view.drawColor = Color.blue;
-        view.TextureDrawHull(model.concaveHull, ref texture);
-        view.drawColor = Color.green;
-        view.TextureDrawPoints(model.orthogonalPoints, ref texture);
-        view.drawColor = Color.red;
-        view.TextureDrawPoints(model.concaveHull, ref texture);
-        */
-        //view.TextureDrawHull(model.convexHull, ref texture);
-
-        // Set the final result
-        map.texture = texture;
+        view.RenderTrack(path);
     }
 
     public void OnClick()

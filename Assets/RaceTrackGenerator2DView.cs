@@ -1,16 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class RaceTrackGeneratorView
+[RequireComponent(typeof(RawImage))]
+public class RaceTrackGenerator2DView : MonoBehaviour, IRaceTrackRenderer
 {
-    public Color drawColor
-    { get; set; }
+    private RawImage target;
+    public int sizeX = 100;
+    public int sizeY = 100;
+    public Color pointsColor
+    { get; set; } = Color.red;
+    public Color pathColor
+    { get; set; } = Color.blue;
 
-    public RaceTrackGeneratorView(Color drawColor = default(Color))
+    void Start()
     {
-        this.drawColor = drawColor;
+        this.target = GetComponent<RawImage>();
+        if (this.target == null)
+        {
+            throw new System.ArgumentException("Target RawImage is null.");
+        }
     }
+
+    public void RenderTrack(Vector2[] path)
+    {
+        Texture2D texture = new Texture2D(sizeX, sizeY);
+        texture.filterMode = FilterMode.Point;
+        TextureFillWhite(ref texture);
+        TextureDrawHull(path, ref texture);
+        TextureDrawPoints(path, ref texture);
+        target.texture = texture;
+    }
+
 
     public void TextureFillWhite(ref Texture2D texture)
     {
@@ -25,29 +47,34 @@ public class RaceTrackGeneratorView
         texture.Apply();
     }
 
-    public void TextureDrawPoints(IReadOnlyList<Vector2> points, ref Texture2D texture)
+    public void TextureDrawPoints(Vector2[] points, ref Texture2D texture)
     {
-        if (points == null || points.Count < 1 || texture == null)
+        if (points == null || points.Length < 1 || texture == null)
         {
             throw new System.ArgumentException("Invalid arguments.");
         }
 
-        for (int i = 0; i < points.Count; i++)
+        for (int i = 0; i < points.Length; i++)
         {
-            texture.SetPixel((int)points[i].x, (int)points[i].y, drawColor);
+            texture.SetPixel((int)points[i].x, (int)points[i].y, pointsColor);
         }
         texture.Apply();
     }
 
-    public void TextureDrawHull(IReadOnlyList<Vector2> points, ref Texture2D texture)
+    public void TextureDrawHull(Vector2[] points, ref Texture2D texture)
     {
-        float frac = 1f / points.Count;
+        if (points == null || points.Length < 1 || texture == null)
+        {
+            throw new System.ArgumentException("Invalid arguments.");
+        }
+
+        float frac = 1f / points.Length;
         float colorPercentage = -frac;
-        for (int i = 0; i < points.Count; i++)
+        for (int i = 0; i < points.Length; i++)
         {
             colorPercentage += frac;
-            int nextIndex = (i + 1) % points.Count;
-            Color color = Color.Lerp(Color.black, drawColor, colorPercentage);
+            int nextIndex = (i + 1) % points.Length;
+            Color color = Color.Lerp(Color.black, pathColor, colorPercentage);
             DrawLine(points[i], points[nextIndex], color, ref texture);
         }
         texture.Apply();
