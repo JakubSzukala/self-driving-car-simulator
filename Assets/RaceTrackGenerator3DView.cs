@@ -24,7 +24,7 @@ public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackRenderer
         // For points with index > 0 take the average of directions
         // between next and previous to make the path smoother
         Vector3[] vertices = new Vector3[path.Length * 2];
-        int[] meshTriangles = new int[2 * (path.Length - 1) * 3];
+        int[] meshTriangles = new int[2 * path.Length * 3];
         int vertexIndex = 0;
         int triangleIndex = 0;
         for (int i = 0; i < path.Length; i++)
@@ -49,18 +49,13 @@ public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackRenderer
 
             // Assign each vertex to a mesh triangle (see video)
             // Each three members of meshTriangles constitute to vertices of one triangle
-            if (i < path.Length - 1)
-            {
-                // First triangle
-                meshTriangles[triangleIndex] = vertexIndex;
-                meshTriangles[triangleIndex + 1] = vertexIndex + 2;
-                meshTriangles[triangleIndex + 2] = vertexIndex + 1;
+            meshTriangles[triangleIndex] = vertexIndex;
+            meshTriangles[triangleIndex + 1] = (vertexIndex + 2) % vertices.Length;
+            meshTriangles[triangleIndex + 2] = vertexIndex + 1;
 
-                // Second triangle
-                meshTriangles[triangleIndex + 3] = vertexIndex + 1;
-                meshTriangles[triangleIndex + 4] = vertexIndex + 2;
-                meshTriangles[triangleIndex + 5] = vertexIndex + 3;
-            }
+            meshTriangles[triangleIndex + 3] = vertexIndex + 1;
+            meshTriangles[triangleIndex + 4] = (vertexIndex + 2) % vertices.Length;
+            meshTriangles[triangleIndex + 5] = (vertexIndex + 3) % vertices.Length;
 
             vertexIndex += 2;
             triangleIndex += 6;
