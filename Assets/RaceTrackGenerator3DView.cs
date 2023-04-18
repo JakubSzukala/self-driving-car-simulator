@@ -8,6 +8,7 @@ using UnityEngine;
 public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackRenderer
 {
     public float roadWidth = 5f;
+    public Material material;
     void Start()
     {
 
@@ -16,6 +17,7 @@ public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackRenderer
     public void RenderTrack(Vector2[] path)
     {
         GetComponent<MeshFilter>().mesh = GenerateMesh(path);
+        GetComponent<MeshRenderer>().material = material;
     }
 
     public Mesh GenerateMesh(Vector2[] path)
@@ -24,6 +26,7 @@ public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackRenderer
         // For points with index > 0 take the average of directions
         // between next and previous to make the path smoother
         Vector3[] vertices = new Vector3[path.Length * 2];
+        Vector2[] uvs = new Vector2[vertices.Length];
         int[] meshTriangles = new int[2 * path.Length * 3];
         int vertexIndex = 0;
         int triangleIndex = 0;
@@ -47,6 +50,12 @@ public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackRenderer
             vertices[vertexIndex] = (Vector3)path[i] + left;
             vertices[vertexIndex + 1] = (Vector3)path[i] + right;
 
+            // Map each vertex to the point on the texture
+            float completionPercentage = i / (float)(path.Length - 1);
+            float v = -1 - Mathf.Abs(2 * completionPercentage - 1);
+            uvs[vertexIndex] = new Vector2(0, v);
+            uvs[vertexIndex + 1] = new Vector2(1, v);
+
             // Assign each vertex to a mesh triangle (see video)
             // Each three members of meshTriangles constitute to vertices of one triangle
             meshTriangles[triangleIndex] = vertexIndex;
@@ -63,6 +72,7 @@ public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackRenderer
         Mesh mesh = new Mesh();
         mesh.vertices = vertices;
         mesh.triangles = meshTriangles;
+        mesh.uv = uvs;
         return mesh;
     }
 }
