@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(RaceTrackGenerator))]
-[RequireComponent(typeof(MeshRenderer))]
-[RequireComponent(typeof(MeshFilter))]
+//[RequireComponent(typeof(MeshRenderer))]
+//[RequireComponent(typeof(MeshFilter))]
 public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackRenderer
 {
     public float roadWidth = 5f;
-    public Material material;
+    public Material materialRoad;
+
+    // References to children
+    public GameObject walls;
+    public GameObject road;
+
     void Start()
     {
 
@@ -16,11 +21,11 @@ public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackRenderer
 
     public void RenderTrack(Vector2[] path)
     {
-        GetComponent<MeshFilter>().mesh = GenerateMesh(path);
-        GetComponent<MeshRenderer>().material = material;
+        road.GetComponent<MeshFilter>().mesh = GenerateRoadMesh(path);
+        road.GetComponent<MeshRenderer>().material = materialRoad;
     }
 
-    public Mesh GenerateMesh(Vector2[] path)
+    private Mesh GenerateRoadMesh(Vector2[] path)
     {
         // https://www.youtube.com/watch?v=Q12sb-sOhdI&list=PLFt_AvWsXl0d8aDaovNztYf6iTChHzrHP&index=6
         // For points with index > 0 take the average of directions
