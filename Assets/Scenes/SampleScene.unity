@@ -1280,7 +1280,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1729511381}
   m_Layer: 0
-  m_Name: Walls
+  m_Name: WallLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1335,6 +1335,37 @@ Transform:
   - {fileID: 1014544902}
   m_Father: {fileID: 126148875}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1831431839
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1831431840}
+  m_Layer: 0
+  m_Name: WallRight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1831431840
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1831431839}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1862866205}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1839954359
 GameObject:
@@ -1469,7 +1500,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roadWidth: 5
   materialRoad: {fileID: 2100000, guid: 00da64a200865559781e2e55ee74114b, type: 2}
-  walls: {fileID: 1729511380}
+  wallLeft: {fileID: 1729511380}
+  wallRight: {fileID: 1831431839}
   road: {fileID: 1472885737}
 --- !u!114 &1862866204
 MonoBehaviour:
@@ -1502,6 +1534,7 @@ Transform:
   m_Children:
   - {fileID: 1472885740}
   - {fileID: 1729511381}
+  - {fileID: 1831431840}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -11,7 +11,8 @@ public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackRenderer
     public Material materialRoad;
 
     // References to children
-    public GameObject walls;
+    public GameObject wallLeft;
+    public GameObject wallRight;
     public GameObject road;
 
     void Start()
@@ -79,5 +80,15 @@ public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackRenderer
         mesh.triangles = meshTriangles;
         mesh.uv = uvs;
         return mesh;
+    }
+
+    private void AddRoadVertex(Vector3[] vertices, Vector2[] uvs, int[] triangles, int vIdx, int tIdx, Vector2 forward)
+    {
+
+    }
+
+    private void AddWallVertex(Vector3[] vertices, Vector2[] uvs, int[] triangles, int vIdx, int tIdx, Vector2 forward, bool isLeft)
+    {
+        
     }
 }
