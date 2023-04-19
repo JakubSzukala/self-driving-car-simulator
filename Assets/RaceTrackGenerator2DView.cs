@@ -3,26 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(RaceTrackGenerator))]
-[RequireComponent(typeof(RawImage))]
 public class RaceTrackGenerator2DView : MonoBehaviour, IRaceTrackRenderer
 {
-    private RawImage target;
+    public GameObject target;
+    private RawImage rawImage;
     public int sizeX = 100;
     public int sizeY = 100;
     public Color pointsColor
     { get; set; } = Color.red;
     public Color pathColor
     { get; set; } = Color.blue;
-
-    void Start()
-    {
-        this.target = GetComponent<RawImage>();
-        if (this.target == null)
-        {
-            throw new System.ArgumentException("Target RawImage is null.");
-        }
-    }
 
     public void RenderTrack(Vector2[] path)
     {
@@ -31,7 +21,7 @@ public class RaceTrackGenerator2DView : MonoBehaviour, IRaceTrackRenderer
         TextureFillWhite(ref texture);
         TextureDrawHull(path, ref texture);
         TextureDrawPoints(path, ref texture);
-        target.texture = texture;
+        target.GetComponent<RawImage>().texture = texture;
     }
 
 

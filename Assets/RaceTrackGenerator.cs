@@ -8,8 +8,8 @@ using UnityEngine.UI;
 [System.Serializable]
 public class RaceTrackGenerator : MonoBehaviour
 {
-    public RaceTrackPathGenerator model;
-    public IRaceTrackRenderer view;
+    public PathAnchorPointsGenerator model;
+    public IRaceTrackRenderer[] views;
 
     private Texture2D texture;
     [SerializeField] public int rangeX = 100;
@@ -22,15 +22,18 @@ public class RaceTrackGenerator : MonoBehaviour
     void Start()
     {
         // Create refs
-        model = new RaceTrackPathGenerator(rangeX, rangeY);
-        view = GetComponent<IRaceTrackRenderer>();
+        model = new PathAnchorPointsGenerator(rangeX, rangeY);
+        views = GetComponents<IRaceTrackRenderer>();
 
         Regenerate();
     }
 
     void Update()
     {
-        view.RenderTrack(path);
+        foreach(var view in views)
+        {
+            view.RenderTrack(path);
+        }
     }
 
     public void Regenerate()
@@ -41,7 +44,10 @@ public class RaceTrackGenerator : MonoBehaviour
         path = model.GenerateConcavePath(
             numberOfPoints, pointConcavityProbability, smoothingDegree);
 
-        view.RenderTrack(path);
+        foreach(var view in views)
+        {
+            view.RenderTrack(path);
+        }
     }
 
     public void OnClick()

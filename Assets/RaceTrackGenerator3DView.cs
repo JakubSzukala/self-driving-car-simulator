@@ -22,11 +22,6 @@ public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackRenderer
     public GameObject wallRight;
     public GameObject road;
 
-    void Start()
-    {
-
-    }
-
     public void RenderTrack(Vector2[] path)
     {
         Mesh roadMesh, wallLeftMesh, wallRightMesh;
