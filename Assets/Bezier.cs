@@ -36,6 +36,14 @@ public class BezierPath
         this.points = new List<Vector2>();
     }
 
+    public int SegmentsN
+    {
+        get
+        {
+            return (points.Count - 4) / 3 + 1;
+        }
+    }
+
     public void AddFirstSegment(Vector2 anchorPoint1, Vector2 anchorPoint2)
     {
         if (points.Count != 0)
@@ -58,5 +66,17 @@ public class BezierPath
         points.Add(anchorPoint);
     }
 
+    public IEnumerable<Vector2[]> Segments()
+    {
+        for (int i = 0; i < SegmentsN; i++)
+        {
+            yield return new Vector2[] {
+            points[i * 3],
+            points[i * 3 + 1],
+            points[i * 3 + 2],
+            points[i * 3 + 3]
+            };
+        }
+    }
 
 }
