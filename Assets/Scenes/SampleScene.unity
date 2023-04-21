@@ -433,6 +433,7 @@ GameObject:
   - component: {fileID: 673038261}
   - component: {fileID: 673038260}
   - component: {fileID: 673038259}
+  - component: {fileID: 673038262}
   m_Layer: 5
   m_Name: RawImage
   m_TagString: Untagged
@@ -495,6 +496,35 @@ RectTransform:
   m_AnchoredPosition: {x: 1000, y: 200}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &673038262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 673038258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 673038258}
+          m_TargetAssemblyTypeName: 
+          m_MethodName: 
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: 
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1759,6 +1789,7 @@ GameObject:
   - component: {fileID: 1862866201}
   - component: {fileID: 1862866205}
   - component: {fileID: 1862866209}
+  - component: {fileID: 1862866210}
   m_Layer: 0
   m_Name: RaceTrack
   m_TagString: Untagged
@@ -1800,7 +1831,7 @@ MonoBehaviour:
   rangeX: 100
   rangeY: 100
   numberOfPoints: 50
-  pointConcavityProbability: 0.5
+  concavePointsPercentage: 0.25
   smoothingDegree: 4
 --- !u!114 &1862866205
 MonoBehaviour:
@@ -1853,6 +1884,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d1f761bdf549f251ac395a0c8a95912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1862866210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1862866200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1862866204}
+          m_TargetAssemblyTypeName: RaceTrackGenerator, Assembly-CSharp
+          m_MethodName: OnClick
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &2120490044
 GameObject:
   m_ObjectHideFlags: 0
@@ -1909,7 +1969,7 @@ MonoBehaviour:
   rangeX: 100
   rangeY: 100
   numberOfPoints: 10
-  pointConcavityProbability: 0.7
+  concavePointsPercentage: 0.25
   smoothingDegree: 1
 --- !u!114 &2120490047
 MonoBehaviour:

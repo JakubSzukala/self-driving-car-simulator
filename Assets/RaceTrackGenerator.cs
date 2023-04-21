@@ -37,6 +37,11 @@ public class RaceTrackGenerator : MonoBehaviour
         {
             view.RenderTrack(path);
         }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Regenerate();
+        }
     }
 
     public void Regenerate()
