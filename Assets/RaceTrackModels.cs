@@ -57,32 +57,27 @@ public class PathAnchorPointsGenerator
         return path;
     }
 
-    public Vector2[] GenerateConcavePath(int nPointsToWrap, float pointConcavityProb)
+    public Vector2[] GenerateConcavePath(int nPointsToWrap, float concavePointsPercentage)
     {
         // Validation
         if (nPointsToWrap < 3)
         {
             throw new System.ArgumentException("Number of points must be greater than 2.");
         }
-        if (pointConcavityProb < 0f || pointConcavityProb > 1f)
+        if (concavePointsPercentage < 0f || concavePointsPercentage > 1f)
         {
-            throw new System.ArgumentException("Concativity probability must be between 0f and 1f");
+            throw new System.ArgumentException("Percentage of concave points must be between [0, 1]");
         }
 
         // Logic
         GenerateRandomPoints(nPointsToWrap);
         CalculateConvexPath();
-        CalculateConcavePath(pointConcavityProb);
+        CalculateConcavePath(concavePointsPercentage);
         return path;
     }
 
     private void GenerateRandomPoints(int numberOfPoints)
     {
-        if(numberOfPoints < 3)
-        {
-            throw new System.ArgumentException("Invalid number of points.");
-        }
-
         randomPoints = new Vector2[numberOfPoints];
         for(int i = 0; i < numberOfPoints; i++)
         {
@@ -95,11 +90,6 @@ public class PathAnchorPointsGenerator
 
     private void CalculateConvexPath()
     {
-        if (randomPoints == null || randomPoints.Length < 3)
-        {
-            throw new System.ArgumentException("Invalid fields values.");
-        }
-
         // Find the leftmost point, it is guaranteed to be on the hull
         List<Vector2> tempPath = new List<Vector2>();
         int mostLeftPointIdx = 0;
@@ -146,13 +136,12 @@ public class PathAnchorPointsGenerator
         path = tempPath.ToArray();
     }
 
-    public void CalculateConcavePath(float probability)
+    private void CalculateConcavePath(float concavePointsPercentage)
     {
-        if (probability < 0f || probability > 1f)
-        {
-            throw new System.ArgumentException("Invalid probability value.");
-        }
         List<Vector2> concaveHull = new List<Vector2>();
+
+        int concavePointsN = Mathf.CeilToInt(path.Length * concavePointsPercentage);
+        HashSet<int> concavePointsIndexes = GetUniqueRandomIndexes(concavePointsN, path.Length);
 
         // Calculate center of mass of a convex hull
         Vector2 accumulate = Vector2.zero;
@@ -168,7 +157,7 @@ public class PathAnchorPointsGenerator
         for(int i = 0; i < path.Count(); i++)
         {
             float seed = Random.Range(0f, 1f);
-            if(seed < probability) // Displace a point
+            if(concavePointsIndexes.Contains(i)) // Displace a point
             {
                 // Clamp gaussian distribution
                 do
@@ -205,5 +194,20 @@ public class PathAnchorPointsGenerator
         // https://en.wikipedia.org/wiki/Marsaglia_polar_method
         s = Mathf.Sqrt((-2f * Mathf.Log(s)) / s);
         return stdDev * v1 * s + mean;
+    }
+
+    private HashSet<int> GetUniqueRandomIndexes(int indexesN, int length)
+    {
+        HashSet<int> randomIndexes = new HashSet<int>();
+        for (int i = 0; i < indexesN; i++)
+        {
+            int randomInt = Mathf.CeilToInt(Random.Range(0, length));
+            while(randomIndexes.Contains(randomInt))
+            {
+                randomInt = Mathf.CeilToInt(Random.Range(0, length));
+            }
+            randomIndexes.Add(randomInt);
+        }
+        return randomIndexes;
     }
 }
