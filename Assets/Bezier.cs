@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+* Credits for the Bezier and BezierPath classes:
+* https://www.youtube.com/watch?v=d9k97JemYbM&list=PLFt_AvWsXl0d8aDaovNztYf6iTChHzrHP&index=5
+* https://github.com/SebLague/Curve-Editor
+*/
+
 public static class Bezier
 {
     public static Vector2 EvaluateQuadratic(Vector2 a, Vector2 b, Vector2 c, float t)
@@ -116,7 +122,6 @@ public class BezierPath
 
     public Vector2[] CalculateEvenlySpacedPoints(float spacing, float resolution = 1)
     {
-        // https://www.youtube.com/watch?v=d9k97JemYbM&list=PLFt_AvWsXl0d8aDaovNztYf6iTChHzrHP&index=5
         List<Vector2> evenlySpacedPoints = new List<Vector2>();
         evenlySpacedPoints.Add(points[0]);
         Vector2 prevPoint = points[0];

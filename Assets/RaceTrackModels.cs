@@ -207,32 +207,3 @@ public class PathAnchorPointsGenerator
         return stdDev * v1 * s + mean;
     }
 }
-
-// TODO: change it into component and allow for setting smoothing degree
-public class ChaikinSmoothing : IPathSmoothing
-{
-    public Vector2[] Smooth(Vector2[] path)
-    {
-        Vector2[] smoothedPath = new Vector2[2 * path.Length];
-        for (int i = 0; i < path.Count(); i++)
-        {
-            int nextIndex = (i + 1) % path.Count();
-            int prevIndex = i > 0 ? i - 1 : i - 1 + path.Count();
-            smoothedPath[i * 2] = Vector2.Lerp(path[prevIndex], path[i], 0.75f);
-            smoothedPath[(i * 2) + 1] = Vector2.Lerp(path[i], path[nextIndex], 0.25f);
-        }
-        return smoothedPath;
-    }
-}
-
-
-public class BezierSmoothing : IPathSmoothing
-{
-    BezierPath path;
-    public Vector2[] Smooth(Vector2[] path)
-    {
-        this.path = new BezierPath(path, true);
-        this.path.AllControlPointsAutoSet();
-        return this.path.CalculateEvenlySpacedPoints(1f);
-    }
-}

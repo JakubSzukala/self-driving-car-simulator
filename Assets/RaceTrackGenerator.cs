@@ -6,11 +6,13 @@ using UnityEngine.UI;
 
 
 [System.Serializable]
+[RequireComponent(typeof(IRaceTrackRenderer))]
+[RequireComponent(typeof(IPathSmoothing))]
 public class RaceTrackGenerator : MonoBehaviour
 {
     public PathAnchorPointsGenerator model;
     public IRaceTrackRenderer[] views;
-    private IPathSmoothing pathSmoother;
+    public IPathSmoothing pathSmoother;
 
     private Texture2D texture;
     [SerializeField] public int rangeX = 100;
@@ -25,7 +27,7 @@ public class RaceTrackGenerator : MonoBehaviour
         // Create refs
         model = new PathAnchorPointsGenerator(rangeX, rangeY);
         views = GetComponents<IRaceTrackRenderer>();
-        pathSmoother = new BezierSmoothing();
+        pathSmoother = GetComponent<IPathSmoothing>();
         Regenerate();
     }
 
@@ -45,8 +47,9 @@ public class RaceTrackGenerator : MonoBehaviour
         path = model.GenerateConcavePath(
             numberOfPoints, pointConcavityProbability);
 
-        path = pathSmoother.Smooth(path); // TODO: make it into a component?
+        path = pathSmoother.Smooth(path);
 
+        // Render in all available views
         foreach(var view in views)
         {
             view.RenderTrack(path);
