@@ -10,6 +10,7 @@ public class RaceTrackGenerator : MonoBehaviour
 {
     public PathAnchorPointsGenerator model;
     public IRaceTrackRenderer[] views;
+    private IPathSmoothing pathSmoother;
 
     private Texture2D texture;
     [SerializeField] public int rangeX = 100;
@@ -24,7 +25,7 @@ public class RaceTrackGenerator : MonoBehaviour
         // Create refs
         model = new PathAnchorPointsGenerator(rangeX, rangeY);
         views = GetComponents<IRaceTrackRenderer>();
-
+        pathSmoother = new BezierSmoothing();
         Regenerate();
     }
 
@@ -42,7 +43,9 @@ public class RaceTrackGenerator : MonoBehaviour
         model.rangeX = rangeX; // Set range in which path will be generated
         model.rangeY = rangeY;
         path = model.GenerateConcavePath(
-            numberOfPoints, pointConcavityProbability, smoothingDegree);
+            numberOfPoints, pointConcavityProbability);
+
+        path = pathSmoother.Smooth(path); // TODO: make it into a component?
 
         foreach(var view in views)
         {

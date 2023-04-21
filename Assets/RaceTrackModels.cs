@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class RaceTrackPathGenerator
+public class PathAnchorPointsGenerator
 {
     private Vector2[] randomPoints;
     private Vector2[] path;
@@ -37,44 +37,32 @@ public class RaceTrackPathGenerator
         }
     }
 
-    public RaceTrackPathGenerator(int rangeX, int rangeY)
+    public PathAnchorPointsGenerator(int rangeX, int rangeY)
     {
         this.rangeX = rangeX;
         this.rangeY = rangeY;
     }
 
-    public Vector2[] GenerateConvexPath(int nPointsToWrap, int smoothingDegree)
+    public Vector2[] GenerateConvexPath(int nPointsToWrap)
     {
         // Validation
         if (nPointsToWrap < 3)
         {
             throw new System.ArgumentException("Number of points must be greater than 2.");
-        }
-        if (smoothingDegree < 0)
-        {
-            throw new System.ArgumentException("Smoothing degree must be greater than 0.");
         }
 
         // Logic
         GenerateRandomPoints(nPointsToWrap);
         CalculateConvexPath();
-        for (int i = 0; i < smoothingDegree; i++)
-        {
-            ChaikinSmoothing();
-        }
         return path;
     }
 
-    public Vector2[] GenerateConcavePath(int nPointsToWrap, float pointConcavityProb, int smoothingDegree)
+    public Vector2[] GenerateConcavePath(int nPointsToWrap, float pointConcavityProb)
     {
         // Validation
         if (nPointsToWrap < 3)
         {
             throw new System.ArgumentException("Number of points must be greater than 2.");
-        }
-        if (smoothingDegree < 0)
-        {
-            throw new System.ArgumentException("Smoothing degree must be greater than 0.");
         }
         if (pointConcavityProb < 0f || pointConcavityProb > 1f)
         {
@@ -85,10 +73,6 @@ public class RaceTrackPathGenerator
         GenerateRandomPoints(nPointsToWrap);
         CalculateConvexPath();
         CalculateConcavePath(pointConcavityProb);
-        for (int i = 0; i < smoothingDegree; i++)
-        {
-            ChaikinSmoothing();
-        }
         return path;
     }
 
@@ -222,11 +206,14 @@ public class RaceTrackPathGenerator
         s = Mathf.Sqrt((-2f * Mathf.Log(s)) / s);
         return stdDev * v1 * s + mean;
     }
+}
 
-    private void ChaikinSmoothing()
+// TODO: change it into component and allow for setting smoothing degree
+public class ChaikinSmoothing : IPathSmoothing
+{
+    public Vector2[] Smooth(Vector2[] path)
     {
-        // http://graphics.cs.ucdavis.edu/education/CAGDNotes/Chaikins-Algorithm/Chaikins-Algorithm.html
-        Vector2[] smoothedPath = new Vector2[2 * path.Count()];
+        Vector2[] smoothedPath = new Vector2[2 * path.Length];
         for (int i = 0; i < path.Count(); i++)
         {
             int nextIndex = (i + 1) % path.Count();
@@ -234,6 +221,18 @@ public class RaceTrackPathGenerator
             smoothedPath[i * 2] = Vector2.Lerp(path[prevIndex], path[i], 0.75f);
             smoothedPath[(i * 2) + 1] = Vector2.Lerp(path[i], path[nextIndex], 0.25f);
         }
-        path = smoothedPath;
+        return smoothedPath;
+    }
+}
+
+
+public class BezierSmoothing : IPathSmoothing
+{
+    BezierPath path;
+    public Vector2[] Smooth(Vector2[] path)
+    {
+        this.path = new BezierPath(path, true);
+        this.path.AllControlPointsAutoSet();
+        return this.path.CalculateEvenlySpacedPoints(1f);
     }
 }
