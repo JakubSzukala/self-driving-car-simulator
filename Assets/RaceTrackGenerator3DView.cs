@@ -32,7 +32,7 @@ public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackRenderer
 
     public void PrepareTrackRender(Vector2[] path)
     {
-        GenerateTrackMeshes(path, out roadMesh, out wallLeftMesh, out wallRightMesh);
+        GenerateTrackMeshes(path, out roadMesh, out wallLeftMesh, out wallRightMesh); // TODO: refactor this
     }
 
     public bool IsTrackRenderValid()
@@ -50,11 +50,16 @@ public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackRenderer
         road.GetComponent<MeshFilter>().mesh = roadMesh;
         road.GetComponent<MeshRenderer>().material = materialRoad;
 
+        // Flipping the faces inside out, so they are visible from inside track
+        // It will also fix collisions
+        wallLeftMesh.triangles = wallLeftMesh.triangles.Reverse().ToArray();
         wallLeft.GetComponent<MeshFilter>().mesh = wallLeftMesh;
         wallLeft.GetComponent<MeshRenderer>().material = materialWalls;
+        wallLeft.GetComponent<MeshCollider>().sharedMesh = wallLeftMesh;
 
         wallRight.GetComponent<MeshFilter>().mesh = wallRightMesh;
         wallRight.GetComponent<MeshRenderer>().material = materialWalls;
+        wallRight.GetComponent<MeshCollider>().sharedMesh = wallRightMesh;
     }
 
     // Add control variable? To allow choosing what to generate?
