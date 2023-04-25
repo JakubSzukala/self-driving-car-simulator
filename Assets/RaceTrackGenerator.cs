@@ -19,7 +19,6 @@ public class RaceTrackGenerator : MonoBehaviour
     [SerializeField] public int rangeY = 100;
     [SerializeField] public int numberOfPoints = 3;
     [SerializeField] public float concavePointsPercentage = 0.25f;
-    [SerializeField] public int smoothingDegree = 1;
     private Vector2[] path;
 
     void Start()
@@ -33,11 +32,6 @@ public class RaceTrackGenerator : MonoBehaviour
 
     void Update()
     {
-        //foreach(var view in views)
-        //{
-            //view.RenderTrack(path);
-        //}
-
         if (Input.GetMouseButtonDown(0))
         {
             Regenerate();
