@@ -22,11 +22,13 @@ public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackRenderer
     public GameObject wallRight;
     public GameObject road;
 
+    public Mesh temp;
+
     public void RenderTrack(Vector2[] path)
     {
         Mesh roadMesh, wallLeftMesh, wallRightMesh;
         GenerateTrackMeshes(path, out roadMesh, out wallLeftMesh, out wallRightMesh);
-
+        temp = roadMesh;
         road.GetComponent<MeshFilter>().mesh = roadMesh;
         road.GetComponent<MeshRenderer>().material = materialRoad;
 

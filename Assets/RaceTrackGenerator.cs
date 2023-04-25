@@ -58,6 +58,21 @@ public class RaceTrackGenerator : MonoBehaviour
         foreach(var view in views)
         {
             view.RenderTrack(path);
+            RaceTrackGenerator3DView temp = view as RaceTrackGenerator3DView;
+            if (temp)
+            {
+                Vector2[] overlaps = RaceTrackMeshArtifactDetector.RaceTrackMeshOverlap(temp.temp);
+                if (overlaps.Any())
+                {
+                    Debug.Log("OMG OVERLAP");
+                    foreach(Vector2 overlapPosition in overlaps)
+                    {
+                        GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                        sphere.transform.position = overlapPosition;
+                    }
+                    //sphere.transform()
+                }
+            }
         }
     }
 

@@ -9,6 +9,6 @@ public class BezierSmoothing : MonoBehaviour, IPathSmoothing
     {
         this.path = new BezierPath(path, true);
         this.path.AllControlPointsAutoSet();
-        return this.path.CalculateEvenlySpacedPoints(1f);
+        return this.path.CalculateEvenlySpacedPoints(4f);
     }
 }
