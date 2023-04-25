@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public enum WallSide
 {
@@ -14,21 +15,38 @@ public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackRenderer
 {
     public float roadWidth = 5f;
     public float wallHeight = 2f;
-    public Material materialRoad;
-    public Material materialWalls;
 
     // References to children
     public GameObject wallLeft;
     public GameObject wallRight;
     public GameObject road;
 
-    public Mesh temp;
+    // Meshes
+    private Mesh roadMesh;
+    private Mesh wallLeftMesh;
+    private Mesh wallRightMesh;
 
-    public void RenderTrack(Vector2[] path)
+    // Materials
+    public Material materialRoad;
+    public Material materialWalls;
+
+    public void PrepareTrackRender(Vector2[] path)
     {
-        Mesh roadMesh, wallLeftMesh, wallRightMesh;
         GenerateTrackMeshes(path, out roadMesh, out wallLeftMesh, out wallRightMesh);
-        temp = roadMesh;
+    }
+
+    public bool IsTrackRenderValid()
+    {
+        bool IsTrackRenderValid = true;
+
+        // Track is valid if no mesh overlaps were found
+        IsTrackRenderValid &= !RaceTrackMeshArtifactDetector.FindRaceTrackMeshOverlaps(roadMesh).Any();
+
+        return IsTrackRenderValid;
+    }
+
+    public void RenderTrack()
+    {
         road.GetComponent<MeshFilter>().mesh = roadMesh;
         road.GetComponent<MeshRenderer>().material = materialRoad;
 
@@ -43,6 +61,7 @@ public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackRenderer
     private void GenerateTrackMeshes(Vector2[] path, out Mesh roadMesh, out Mesh wallLeft, out Mesh wallRight)
     {
         // https://www.youtube.com/watch?v=Q12sb-sOhdI&list=PLFt_AvWsXl0d8aDaovNztYf6iTChHzrHP&index=6
+        // TODO: Does it need to be instantiated every time here?
         RoadVertexGenerator roadVertexGenerator = new RoadVertexGenerator(path.Length, roadWidth);
         WallVertexGenerator wallVertexGeneratorLeft = new WallVertexGenerator(path.Length, wallHeight, roadWidth, WallSide.Left);
         WallVertexGenerator wallVertexGeneratorRight = new WallVertexGenerator(path.Length, wallHeight, roadWidth, WallSide.Right);
@@ -65,6 +84,21 @@ public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackRenderer
         roadMesh = roadVertexGenerator.GetMesh();
         wallLeft = wallVertexGeneratorLeft.GetMesh();
         wallRight = wallVertexGeneratorRight.GetMesh();
+    }
+
+    public Mesh GetRoadMesh()
+    {
+        return road.GetComponent<MeshFilter>().mesh;
+    }
+
+    public Mesh GetWallLeftMesh()
+    {
+        return wallLeft.GetComponent<MeshFilter>().mesh;
+    }
+
+    public Mesh GetWallRightMesh()
+    {
+        return wallRight.GetComponent<MeshFilter>().mesh;
     }
 }
 

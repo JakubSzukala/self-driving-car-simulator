@@ -33,10 +33,10 @@ public class RaceTrackGenerator : MonoBehaviour
 
     void Update()
     {
-        foreach(var view in views)
-        {
-            view.RenderTrack(path);
-        }
+        //foreach(var view in views)
+        //{
+            //view.RenderTrack(path);
+        //}
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -49,31 +49,28 @@ public class RaceTrackGenerator : MonoBehaviour
         // Track generation
         model.rangeX = rangeX; // Set range in which path will be generated
         model.rangeY = rangeY;
-        path = model.GenerateConcavePath(
-            numberOfPoints, concavePointsPercentage);
 
-        path = pathSmoother.Smooth(path);
-
-        // Render in all available views
-        foreach(var view in views)
+        // Find a path that is valid and renders correctly
+        bool areRendersValid;
+        do
         {
-            view.RenderTrack(path);
-            RaceTrackGenerator3DView temp = view as RaceTrackGenerator3DView;
-            if (temp)
+            areRendersValid = true;
+            path = model.GenerateConcavePath(
+                numberOfPoints, concavePointsPercentage);
+
+            path = pathSmoother.Smooth(path);
+
+            // Prepare renders and check if they are valid
+            foreach(var view in views)
             {
-                Vector2[] overlaps = RaceTrackMeshArtifactDetector.FindRaceTrackMeshOverlaps(temp.temp);
-                if (overlaps.Any())
-                {
-                    Debug.Log("OMG OVERLAP");
-                    foreach(Vector2 overlapPosition in overlaps)
-                    {
-                        GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                        sphere.transform.position = overlapPosition;
-                    }
-                    //sphere.transform()
-                }
+                view.PrepareTrackRender(path);
+                areRendersValid &= view.IsTrackRenderValid();
             }
         }
+        while (!areRendersValid);
+
+        // If all renders are valid, then render them all
+        views.ToList().ForEach(v => v.RenderTrack());
     }
 
     public void OnClick()

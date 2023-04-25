@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class RaceTrackGenerator2DView : MonoBehaviour, IRaceTrackRenderer
 {
     public GameObject target;
-    private RawImage rawImage;
+    private Texture2D texture;
     public int sizeX = 100;
     public int sizeY = 100;
     public Color pointsColor
@@ -14,13 +14,23 @@ public class RaceTrackGenerator2DView : MonoBehaviour, IRaceTrackRenderer
     public Color pathColor
     { get; set; } = Color.blue;
 
-    public void RenderTrack(Vector2[] path)
+    public void PrepareTrackRender(Vector2[] path)
     {
-        Texture2D texture = new Texture2D(sizeX, sizeY);
+        texture = new Texture2D(sizeX, sizeY);
         texture.filterMode = FilterMode.Point;
         TextureFillWhite(ref texture);
         TextureDrawHull(path, ref texture);
         TextureDrawPoints(path, ref texture);
+    }
+
+    public bool IsTrackRenderValid()
+    {
+        // There is no major artifacts in 2D render so it's always valid
+        return true;
+    }
+
+    public void RenderTrack()
+    {
         target.GetComponent<RawImage>().texture = texture;
     }
 

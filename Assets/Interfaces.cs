@@ -4,7 +4,11 @@ using UnityEngine;
 
 public interface IRaceTrackRenderer
 {
-    void RenderTrack(Vector2[] path);
+    void PrepareTrackRender(Vector2[] path);
+
+    bool IsTrackRenderValid();
+
+    void RenderTrack();
 }
 
 public interface IPathSmoothing
