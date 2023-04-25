@@ -5,10 +5,9 @@ using System.Linq;
 
 public static class RaceTrackMeshArtifactDetector
 {
-    public static Vector2[] RaceTrackMeshOverlap(Mesh mesh)
+    public static Vector2[] FindRaceTrackMeshOverlaps(Mesh mesh)
     {
         List<Vector2> overlaps = new List<Vector2>();
-        // Add function that will return iterator over mesh triangles
         for (int i = 0; i < MeshTrianglesN(mesh); i++)
         {
             Vector2[] triangle = GetTriangle(mesh, i);
@@ -26,13 +25,6 @@ public static class RaceTrackMeshArtifactDetector
         return overlaps.ToArray();
     }
 
-    private static bool SameSide(Vector2 p1, Vector2 p2, Vector2 a, Vector2 b)
-    {
-        Vector3 crossProduct1 = Vector3.Cross(b - a, p1 - a);
-        Vector3 crossProduct2 = Vector3.Cross(b - a, p2 - a);
-        return Vector3.Dot(crossProduct1, crossProduct2) >= 0;
-    }
-
     private static bool TrianglesIntersect(Vector2[] triangle1, Vector2[] triangle2)
     {
         // https://stackoverflow.com/questions/2778240
@@ -42,7 +34,8 @@ public static class RaceTrackMeshArtifactDetector
             // Loop index
             int nextIndex = (i + 1) % 3;
             int nextNextIndex = (i + 2) % 3;
-            // Check if vertex on triangle2 is on the opposite side
+
+            // Check edges of first triangle
             if(!SameSide(triangle1[i], triangle2[0], triangle1[nextIndex], triangle1[nextNextIndex])
                 && SameSide(triangle2[0], triangle2[1], triangle1[nextIndex], triangle1[nextNextIndex])
                 && SameSide(triangle2[1], triangle2[2], triangle1[nextIndex], triangle1[nextNextIndex]))
@@ -59,6 +52,13 @@ public static class RaceTrackMeshArtifactDetector
             }
         }
         return true;
+    }
+
+    private static bool SameSide(Vector2 p1, Vector2 p2, Vector2 a, Vector2 b)
+    {
+        Vector3 crossProduct1 = Vector3.Cross(b - a, p1 - a);
+        Vector3 crossProduct2 = Vector3.Cross(b - a, p2 - a);
+        return Vector3.Dot(crossProduct1, crossProduct2) >= 0;
     }
 
     private static IEnumerable<Vector2[]> MeshTriangles(Mesh mesh)

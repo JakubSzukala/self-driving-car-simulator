@@ -61,7 +61,7 @@ public class RaceTrackGenerator : MonoBehaviour
             RaceTrackGenerator3DView temp = view as RaceTrackGenerator3DView;
             if (temp)
             {
-                Vector2[] overlaps = RaceTrackMeshArtifactDetector.RaceTrackMeshOverlap(temp.temp);
+                Vector2[] overlaps = RaceTrackMeshArtifactDetector.FindRaceTrackMeshOverlaps(temp.temp);
                 if (overlaps.Any())
                 {
                     Debug.Log("OMG OVERLAP");
