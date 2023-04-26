@@ -50,9 +50,6 @@ public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackRenderer
         road.GetComponent<MeshFilter>().mesh = roadMesh;
         road.GetComponent<MeshRenderer>().material = materialRoad;
 
-        // Flipping the faces inside out, so they are visible from inside track
-        // It will also fix collisions
-        wallLeftMesh.triangles = wallLeftMesh.triangles.Reverse().ToArray();
         wallLeft.GetComponent<MeshFilter>().mesh = wallLeftMesh;
         wallLeft.GetComponent<MeshRenderer>().material = materialWalls;
         wallLeft.GetComponent<MeshCollider>().sharedMesh = wallLeftMesh;
@@ -138,6 +135,8 @@ public abstract class RaceTrackVertexGenerator
 
     public abstract void Reset();
 
+    public abstract Mesh GetMesh();
+
     public void SetPathLength(int pathLength)
     {
         if (pathLength < 1)
@@ -145,15 +144,6 @@ public abstract class RaceTrackVertexGenerator
             throw new System.ArgumentException("Path length can not be smaller than 1.");
         }
         this.pathLength = pathLength;
-    }
-
-    public Mesh GetMesh()
-    {
-        mesh = new Mesh();
-        mesh.vertices = vertices;
-        mesh.triangles = triangles;
-        mesh.uv = uvs;
-        return mesh;
     }
 }
 
@@ -173,13 +163,16 @@ public class RoadVertexGenerator : RaceTrackVertexGenerator
 
     public override void AddVertices(Vector2 pathPoint, Vector2 forward)
     {
+        Vector3 pathPointXZ = new Vector3(pathPoint.x, 0, pathPoint.y);
+        Vector3 forwardXZ = new Vector3(forward.x, 0, forward.y);
+
         // Calculate orthogonal points on both sides
-        Vector3 left = new Vector3(forward.y, -forward.x) * 0.5f * roadWidth;
-        Vector3 right = new Vector3(-forward.y, forward.x) * 0.5f * roadWidth;
+        Vector3 left = new Vector3(forwardXZ.z, 0, -forwardXZ.x) * 0.5f * roadWidth;
+        Vector3 right = new Vector3(-forwardXZ.z, 0, forwardXZ.x) * 0.5f * roadWidth;
 
         // Add them as vertices
-        vertices[vertexIndex] = (Vector3)pathPoint + left;
-        vertices[vertexIndex + 1] = (Vector3)pathPoint + right;
+        vertices[vertexIndex] = pathPointXZ + left;
+        vertices[vertexIndex + 1] = pathPointXZ + right;
 
         // Set uvs, take into account completion percentage of entire track
         completionPercentage += 1 / (float)(pathLength - 1);
@@ -209,6 +202,16 @@ public class RoadVertexGenerator : RaceTrackVertexGenerator
         this.triangleIndex = 0;
         this.completionPercentage = 0;
         this.roadWidth = 0f;
+    }
+
+    public override Mesh GetMesh()
+    {
+        mesh = new Mesh();
+        mesh.vertices = vertices;
+        triangles = triangles.Reverse().ToArray();
+        mesh.triangles = triangles;
+        mesh.uv = uvs;
+        return mesh;
     }
 
     public void SetRoadWidth(float roadWidth)
@@ -242,17 +245,19 @@ public class WallVertexGenerator : RaceTrackVertexGenerator
 
     public override void AddVertices(Vector2 pathPoint, Vector2 forward)
     {
+        Vector3 pathPointXZ = new Vector3(pathPoint.x, 0, pathPoint.y);
+        Vector3 forwardXZ = new Vector3(forward.x, 0, forward.y);
         Vector3 sideVector = Vector3.zero;
         if (side == WallSide.Left)
         {
-            sideVector = new Vector3(forward.y, -forward.x) * 0.5f * roadWidth;
+            sideVector = new Vector3(forwardXZ.z, 0, -forwardXZ.x) * 0.5f * roadWidth;
         }
         if (side == WallSide.Right)
         {
-            sideVector = new Vector3(-forward.y, forward.x) * 0.5f * roadWidth;
+            sideVector = new Vector3(-forwardXZ.z, 0, forwardXZ.x) * 0.5f * roadWidth;
         }
-        vertices[vertexIndex] = (Vector3)pathPoint + sideVector;
-        vertices[vertexIndex + 1] = (Vector3)pathPoint + sideVector + new Vector3(0, 0, wallHeight);
+        vertices[vertexIndex] = (Vector3)pathPointXZ + sideVector;
+        vertices[vertexIndex + 1] = (Vector3)pathPointXZ + sideVector + new Vector3(0, wallHeight, 0);
 
         completionPercentage += 1 / (float)(pathLength - 1);
         float v = -1 - Mathf.Abs(2 * completionPercentage - 1);
@@ -281,6 +286,16 @@ public class WallVertexGenerator : RaceTrackVertexGenerator
         this.completionPercentage = 0f;
         this.roadWidth = 0f;
         this.wallHeight = 0f;
+    }
+
+    public override Mesh GetMesh()
+    {
+        mesh = new Mesh();
+        mesh.vertices = vertices;
+        if (side == WallSide.Left) triangles = triangles.Reverse().ToArray();
+        mesh.triangles = triangles;
+        mesh.uv = uvs;
+        return mesh;
     }
 
     public void SetRoadWidth(float roadWidth)

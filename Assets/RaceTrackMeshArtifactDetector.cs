@@ -21,7 +21,7 @@ public static class RaceTrackMeshArtifactDetector
                     overlaps.Add((triangle[0] + triangle[1] + triangle[2]) / 3f);
                 }
             }
-        }
+        } // TODO: overlaps are x,y coords and should be converted to xz
         return overlaps.ToArray();
     }
 
@@ -61,26 +61,21 @@ public static class RaceTrackMeshArtifactDetector
         return Vector3.Dot(crossProduct1, crossProduct2) >= 0;
     }
 
-    private static IEnumerable<Vector2[]> MeshTriangles(Mesh mesh)
-    {
-        for (int i = 0; i < mesh.triangles.Length; i += 3)
-        {
-            yield return new Vector2[] {
-                mesh.vertices[i % mesh.triangles.Length],
-                mesh.vertices[(i + 1) % mesh.triangles.Length],
-                mesh.vertices[(i + 2) % mesh.triangles.Length]
-                };
-        }
-    }
-
     private static Vector2[] GetTriangle(Mesh mesh, int index)
     {
-        //Debug.Log($"index: {index} max index: {mesh.vertices.Length - 1}");
+        int nextIndex = (index + 1) % mesh.vertices.Length;
+        int nextNextIndex = (index + 2) % mesh.vertices.Length;
+
         return new Vector2[] {
-            mesh.vertices[index],
-            mesh.vertices[(index + 1) % mesh.vertices.Length],
-            mesh.vertices[(index + 2) % mesh.vertices.Length]
-            };
+            new Vector2(mesh.vertices[index].x, mesh.vertices[index].z),
+            new Vector2(mesh.vertices[nextIndex].x, mesh.vertices[nextIndex].z),
+            new Vector2(mesh.vertices[nextNextIndex].x, mesh.vertices[nextNextIndex].z)
+        };
+        //return new Vector2[] {
+        //mesh.vertices[index],
+        //mesh.vertices[(index + 1) % mesh.vertices.Length],
+        //mesh.vertices[(index + 2) % mesh.vertices.Length]
+        //};
     }
 
     private static int MeshTrianglesN(Mesh mesh)
