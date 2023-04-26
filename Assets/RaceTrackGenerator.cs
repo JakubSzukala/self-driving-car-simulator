@@ -15,27 +15,18 @@ public class RaceTrackGenerator : MonoBehaviour
     public IPathSmoothing pathSmoother;
 
     private Texture2D texture;
-    [SerializeField] public int rangeX = 100;
-    [SerializeField] public int rangeY = 100;
-    [SerializeField] public int numberOfPoints = 3;
-    [SerializeField] public float concavePointsPercentage = 0.25f;
+    [SerializeField] private int rangeX = 100;
+    [SerializeField] private int rangeY = 100;
+    [SerializeField] private int numberOfPoints = 3;
+    [SerializeField] private float concavePointsPercentage = 0.25f;
     private Vector2[] path;
 
-    void Start()
+    void Awake()
     {
         // Create refs
         model = new PathAnchorPointsGenerator(rangeX, rangeY);
         views = GetComponents<IRaceTrackRenderer>();
         pathSmoother = GetComponent<IPathSmoothing>();
-        Regenerate();
-    }
-
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            Regenerate();
-        }
     }
 
     public void Regenerate()
