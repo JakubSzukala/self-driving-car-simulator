@@ -14,12 +14,13 @@ public class RaceTrackGenerator : MonoBehaviour
     public IRaceTrackRenderer[] views;
     public IPathSmoothing pathSmoother;
 
-    private Texture2D texture;
     [SerializeField] private int rangeX = 100;
     [SerializeField] private int rangeY = 100;
     [SerializeField] private int numberOfPoints = 3;
     [SerializeField] private float concavePointsPercentage = 0.25f;
     private Vector2[] path;
+    private Vector2 raceTrackStart;
+    private Vector2 raceDirection;
 
     void Awake()
     {
@@ -56,6 +57,17 @@ public class RaceTrackGenerator : MonoBehaviour
 
         // If all renders are valid, then render them all
         views.ToList().ForEach(v => v.RenderTrack());
+
+        // Set the start and race direction
+        raceTrackStart = path[0];
+        raceDirection = path[0] - path[1];
+        raceDirection.Normalize();
+    }
+
+    public void GetStart(out Vector2 start, out Vector2 direction)
+    {
+        start = raceTrackStart;
+        direction = raceDirection;
     }
 
     public void OnClick()

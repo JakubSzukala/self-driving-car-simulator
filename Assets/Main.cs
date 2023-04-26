@@ -16,7 +16,11 @@ public class Main : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            raceTrack.GetComponent<RaceTrackGenerator>().Regenerate();
+            var generator = raceTrack.GetComponent<RaceTrackGenerator>();
+            Vector2 start, direction;
+            generator.Regenerate();
+            generator.GetStart(out start, out direction);
+            Debug.Log($"Start: {start}, direction: {direction}");
         }
     }
 }
