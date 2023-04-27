@@ -1374,7 +1374,7 @@ GameObject:
   - component: {fileID: 1387205333466950123}
   - component: {fileID: 7423132734400595441}
   m_Layer: 6
-  m_Name: F1TenthVehicle
+  m_Name: F1TenthSimplified
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
