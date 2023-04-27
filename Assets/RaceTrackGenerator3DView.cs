@@ -292,7 +292,7 @@ public class WallVertexGenerator : RaceTrackVertexGenerator
     {
         mesh = new Mesh();
         mesh.vertices = vertices;
-        if (side == WallSide.Left) triangles = triangles.Reverse().ToArray();
+        if (side == WallSide.Right) triangles = triangles.Reverse().ToArray();
         mesh.triangles = triangles;
         mesh.uv = uvs;
         return mesh;

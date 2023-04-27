@@ -7,7 +7,8 @@ using UnityEngine;
 * https://www.youtube.com/watch?v=d9k97JemYbM&list=PLFt_AvWsXl0d8aDaovNztYf6iTChHzrHP&index=5
 * https://github.com/SebLague/Curve-Editor
 */
-
+namespace RaceTrackGeneratorBezier
+{
 public static class Bezier
 {
     public static Vector2 EvaluateQuadratic(Vector2 a, Vector2 b, Vector2 c, float t)
@@ -194,4 +195,5 @@ public class BezierPath
     {
         return (i + points.Count) % points.Count;
     }
+}
 }

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using RaceTrackGeneratorBezier;
 public class BezierSmoothing : MonoBehaviour, IPathSmoothing
 {
     BezierPath path;
