@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RaceTrackGenerator2DView : MonoBehaviour, IRaceTrackRenderer
+public class RaceTrackGenerator2DView : MonoBehaviour, IRaceTrackFullRenderable
 {
     public GameObject target;
     private Texture2D texture;

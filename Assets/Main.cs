@@ -9,15 +9,14 @@ public class Main : MonoBehaviour
 
     void Start()
     {
-        RaceTrackGenerator generator = raceTrack.GetComponent<RaceTrackGenerator>();
-        if(generator) raceTrack.GetComponent<RaceTrackGenerator>().Regenerate();
+        raceTrack.GetComponent<ProceduralPathCreator>().Regenerate();
     }
 
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            var generator = raceTrack.GetComponent<RaceTrackGenerator>(); // TODO: Get a reference directly to generator? or nah?
+            var generator = raceTrack.GetComponent<ProceduralPathCreator>(); // TODO: Get a reference directly to generator? or nah?
             Vector2 startXY, directionXY;
             //generator.Regenerate();
             generator.GetStart(out startXY, out directionXY);
@@ -28,7 +27,7 @@ public class Main : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
-            var generator = raceTrack.GetComponent<RaceTrackGenerator>();
+            var generator = raceTrack.GetComponent<ProceduralPathCreator>();
             generator.Regenerate();
         }
     }

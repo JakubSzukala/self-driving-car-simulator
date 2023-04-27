@@ -5,13 +5,10 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-[System.Serializable]
-[RequireComponent(typeof(IRaceTrackRenderer))]
 [RequireComponent(typeof(IPathSmoothing))]
-public class RaceTrackGenerator : MonoBehaviour
+public class ProceduralPathCreator : MonoBehaviour, IPathCreator
 {
     public PathAnchorPointsGenerator model;
-    public IRaceTrackRenderer[] views;
     public IPathSmoothing pathSmoother;
 
     [SerializeField] private int rangeX = 100;
@@ -26,7 +23,6 @@ public class RaceTrackGenerator : MonoBehaviour
     {
         // Create refs
         model = new PathAnchorPointsGenerator(rangeX, rangeY);
-        views = GetComponents<IRaceTrackRenderer>();
         pathSmoother = GetComponent<IPathSmoothing>();
     }
 
@@ -37,26 +33,10 @@ public class RaceTrackGenerator : MonoBehaviour
         model.rangeY = rangeY;
 
         // Find a path that is valid and renders correctly
-        bool areRendersValid;
-        do
-        {
-            areRendersValid = true;
-            path = model.GenerateConcavePath(
-                numberOfPoints, concavePointsPercentage);
+        path = model.GenerateConcavePath(
+            numberOfPoints, concavePointsPercentage);
 
-            path = pathSmoother.Smooth(path);
-
-            // Prepare renders and check if they are valid
-            foreach(var view in views)
-            {
-                view.PrepareTrackRender(path);
-                areRendersValid &= view.IsTrackRenderValid();
-            }
-        }
-        while (!areRendersValid);
-
-        // If all renders are valid, then render them all
-        views.ToList().ForEach(v => v.RenderTrack());
+        path = pathSmoother.Smooth(path);
 
         // Set the start and race direction
         raceTrackStart = path[0];
@@ -73,5 +53,11 @@ public class RaceTrackGenerator : MonoBehaviour
     public void OnClick()
     {
         Regenerate();
+    }
+
+    public Vector2[] CreatePath()
+    {
+        Regenerate();
+        return path;
     }
 }
