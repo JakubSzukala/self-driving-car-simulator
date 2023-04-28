@@ -78,6 +78,7 @@ public class RoadRenderer : MonoBehaviour, IRaceTrackPartRenderable
     {
         GetComponent<MeshFilter>().mesh = mesh;
         GetComponent<MeshRenderer>().material = roadMaterial;
+        GetComponent<MeshCollider>().sharedMesh = mesh;
     }
 
     public void Reset()

@@ -88,6 +88,7 @@ public class WallRenderer : MonoBehaviour, IRaceTrackPartRenderable
     {
         GetComponent<MeshFilter>().mesh = mesh;
         GetComponent<MeshRenderer>().material = wallMaterial;
+        GetComponent<MeshCollider>().sharedMesh = mesh;
     }
 
     public void Reset()

@@ -14,6 +14,9 @@ public interface IRaceTrackFullRenderable
 public interface IPathCreator
 {
     Vector2[] CreatePath();
+
+    void GetStart(out Vector2 start, out Vector2 direction);
+
 }
 
 public interface IPathSmoothing
