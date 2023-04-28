@@ -27,6 +27,8 @@ public interface IRaceTrackPartRenderable
 
     void AddVertices(Vector2 pathPoint, Vector2 forward);
 
+    void SetUpMesh();
+
     void Render();
 
     void Reset();

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+[RequireComponent(typeof(MeshRenderer))]
+[RequireComponent(typeof(MeshFilter))]
 public class RoadVertexGenerator : MonoBehaviour, IRaceTrackPartRenderable
 {
     // DI fields
@@ -22,8 +24,9 @@ public class RoadVertexGenerator : MonoBehaviour, IRaceTrackPartRenderable
 
     public void Initialize(int pathLength)
     {
+        this.pathLength = pathLength;
         this.vertices = new Vector3[2 * pathLength];
-        this.uvs = new Vector2[2 * pathLength]; // Correct size?
+        this.uvs = new Vector2[2 * pathLength];
         this.triangles = new int[2 * pathLength * 3];
         this.vertexIndex = 0;
         this.triangleIndex = 0;
@@ -62,13 +65,17 @@ public class RoadVertexGenerator : MonoBehaviour, IRaceTrackPartRenderable
         triangleIndex += 6;
     }
 
-    public void Render()
+    public void SetUpMesh()
     {
         mesh = new Mesh();
         mesh.vertices = vertices;
         triangles = triangles.Reverse().ToArray();
         mesh.triangles = triangles;
         mesh.uv = uvs;
+    }
+
+    public void Render()
+    {
         GetComponent<MeshFilter>().mesh = mesh;
         GetComponent<MeshRenderer>().material = roadMaterial;
     }

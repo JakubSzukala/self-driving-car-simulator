@@ -18,7 +18,29 @@ public class RaceTrack : MonoBehaviour
     void Start()
     {
         Vector2[] path = raceTrackPathCreator.CreatePath();
-        raceTrackRenderer.PrepareTrackRender(path);
+
+        bool renderIsValid;
+        do
+        {
+            raceTrackRenderer.PrepareTrackRender(path);
+            renderIsValid = raceTrackRenderer.IsTrackRenderValid();
+        } while (!renderIsValid);
         raceTrackRenderer.RenderTrack();
+    }
+
+    void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector2[] path = raceTrackPathCreator.CreatePath();
+
+            bool renderIsValid;
+            do
+            {
+                raceTrackRenderer.PrepareTrackRender(path);
+                renderIsValid = raceTrackRenderer.IsTrackRenderValid();
+            } while (!renderIsValid);
+            raceTrackRenderer.RenderTrack();
+        }
     }
 }

@@ -3,11 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public enum WallSide
-{
-    Left,
-    Right
-}
 
 public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackFullRenderable
 {
@@ -43,6 +38,8 @@ public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackFullRenderable
                 renderable.AddVertices(path[i], forward);
             }
         }
+
+        renderables.ForEach((r) => r.SetUpMesh());
     }
 
     public bool IsTrackRenderValid()
