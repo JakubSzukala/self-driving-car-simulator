@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Linq;
 
 
-public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackFullRenderable
+public class RaceTrack3DView : MonoBehaviour, IRaceTrackFullRenderable
 {
     [SerializeField] private List<IRaceTrackPartRenderable> renderables;
 
