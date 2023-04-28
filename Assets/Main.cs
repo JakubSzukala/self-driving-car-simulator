@@ -9,12 +9,12 @@ public class Main : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             raceTrack.CreateRaceTrack();
         }
 
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetKeyDown(KeyCode.A))
         {
             Vector3 start, direction;
             raceTrack.GetRaceTrackStart(out start, out direction);

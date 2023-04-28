@@ -15,6 +15,8 @@ public class RaceTrack : MonoBehaviour
         raceTrackRenderer = GetComponentInChildren<IRaceTrackFullRenderable>();
     }
 
+    // TODO: Make so that values can be set in race track and then passed
+    // down the hierarchy, values like race track width, wall height, concavity etc
     public void CreateRaceTrack()
     {
         Vector2[] path = raceTrackPathCreator.CreatePath();
