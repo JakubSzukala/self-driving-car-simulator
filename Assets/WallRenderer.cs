@@ -12,7 +12,7 @@ public enum WallSide
 [RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshCollider))]
-public class WallVertexGenerator : MonoBehaviour, IRaceTrackPartRenderable
+public class WallRenderer : MonoBehaviour, IRaceTrackPartRenderable
 {
     // DI fields
     [SerializeField] private float wallHeight = 1f;

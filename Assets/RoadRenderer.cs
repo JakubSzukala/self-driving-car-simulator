@@ -5,7 +5,7 @@ using System.Linq;
 
 [RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(MeshFilter))]
-public class RoadVertexGenerator : MonoBehaviour, IRaceTrackPartRenderable
+public class RoadRenderer : MonoBehaviour, IRaceTrackPartRenderable
 {
     // DI fields
     [SerializeField] private float roadWidth = 1f;

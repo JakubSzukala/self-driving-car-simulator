@@ -49,7 +49,7 @@ public class RaceTrackGenerator3DView : MonoBehaviour, IRaceTrackFullRenderable
         foreach(var renderable in renderables)
         {
             // It is enough to check for road
-            var renderableRoad = renderable as RoadVertexGenerator;
+            var renderableRoad = renderable as RoadRenderer;
             if (renderableRoad)
             {
                 // Track is valid if no mesh overlaps were found
