@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "645e0be565215a9bb2c03c67ab346f57fe988d8d05d52d89b8a04952fe4e5407"
+            "sha256": "0545ca1a8239d0ee58f945dffdd4e53770e29444f1e2c57922038f12591d3860"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -356,7 +356,7 @@
             "hashes": [
                 "sha256:c541c63d090f823173323ad2744b9bf4f1e7ba4cde8f0526e291b33b0d8bddd9"
             ],
-            "markers": "python_version < '3.11' and python_full_version >= '3.8.13'",
+            "index": "pypi",
             "version": "==0.30.0"
         },
         "numpy": {
@@ -600,7 +600,7 @@
                 "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926",
                 "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2'",
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==1.16.0"
         },
         "tensorboard": {

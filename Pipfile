@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 mlagents = "==0.30.0"
+mlagents-envs = "==0.30.0"
 
 [dev-packages]
 
