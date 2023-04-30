@@ -19,14 +19,15 @@ public class RaceTrack : MonoBehaviour
     // down the hierarchy, values like race track width, wall height, concavity etc
     public void CreateRaceTrack()
     {
-        Vector2[] path = raceTrackPathCreator.CreatePath();
-
+        Vector2[] path;
         bool renderIsValid;
         do
         {
+            path = raceTrackPathCreator.CreatePath();
             raceTrackRenderer.PrepareTrackRender(path);
             renderIsValid = raceTrackRenderer.IsTrackRenderValid();
-        } while (!renderIsValid);
+        }
+        while (!renderIsValid);
         raceTrackRenderer.RenderTrack();
     }
 
