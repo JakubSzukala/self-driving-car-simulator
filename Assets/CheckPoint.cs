@@ -6,6 +6,7 @@ using UnityEngine.Events;
 public class CheckPoint : MonoBehaviour
 {
     private UnityEvent checkpointReached;
+
     void Awake()
     {
         // Get reference to event

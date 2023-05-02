@@ -44,7 +44,6 @@ public class RaceTrack : MonoBehaviour
 
     public void CreateRaceTrackCheckPoints()
     {
-        // Instantiate
         for (int i = 0; i < path.Length; i++)
         {
             int nextIndex = (i + 1) % path.Length;
