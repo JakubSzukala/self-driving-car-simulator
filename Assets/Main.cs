@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Main : MonoBehaviour
 {
+    [SerializeField] private float checkpointReward = 1f;
+
     [SerializeField] private RaceTrack raceTrack;
     [SerializeField] private CarSpawner carSpawner;
     [SerializeField] private ScoreSystem scoreSystem;
@@ -29,6 +31,12 @@ public class Main : MonoBehaviour
             raceTrack.GetRaceTrackStart(out start, out direction);
             Debug.Log($"Start: {start}, direction: {direction}");
             StartCoroutine(carSpawner.spawnCar(start, direction));
+            raceTrack.checkpointReached.AddListener(OnCheckpointReached);
         }
+    }
+
+    private void OnCheckpointReached()
+    {
+        scoreSystem.IncreaseScore(checkpointReward);
     }
 }
