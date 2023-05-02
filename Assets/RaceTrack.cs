@@ -6,6 +6,7 @@ public class RaceTrack : MonoBehaviour
 {
     private IPathCreator raceTrackPathCreator;
     private IRaceTrackFullRenderable raceTrackRenderer;
+    [SerializeField] private CheckPointSpawner checkPointSpawner;
 
     private Vector2[] path;
 
@@ -19,7 +20,6 @@ public class RaceTrack : MonoBehaviour
     // down the hierarchy, values like race track width, wall height, concavity etc
     public void CreateRaceTrack()
     {
-        Vector2[] path;
         bool renderIsValid;
         do
         {
@@ -39,5 +39,18 @@ public class RaceTrack : MonoBehaviour
         Vector3 directionXZ = new Vector3(directionXY.x, 0, directionXY.y);
         start = startXZ;
         direction = directionXZ;
+    }
+
+    public void CreateRaceTrackCheckPoints()
+    {
+        for (int i = 0; i < path.Length; i++)
+        {
+            int nextIndex = (i + 1) % path.Length;
+            Vector3 pointXZ = new Vector3(path[i].x, 0, path[i].y);
+            Vector3 direction = path[nextIndex] - path[i];
+            direction = new Vector3(direction.x, 0, direction.y);
+            direction.Normalize();
+            StartCoroutine(checkPointSpawner.SpawnCheckPoint(pointXZ, direction));
+        }
     }
 }

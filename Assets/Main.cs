@@ -12,6 +12,7 @@ public class Main : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q))
         {
             raceTrack.CreateRaceTrack();
+            raceTrack.CreateRaceTrackCheckPoints();
         }
 
         if (Input.GetKeyDown(KeyCode.A))
