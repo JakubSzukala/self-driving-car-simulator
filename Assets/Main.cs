@@ -6,19 +6,15 @@ using UnityEngine;
 public class Main : MonoBehaviour
 {
     [SerializeField] private float checkpointReward = 1f;
+    [SerializeField] private float timeElapsedPenalty = .1f;
 
     [SerializeField] private RaceTrack raceTrack;
     [SerializeField] private CarSpawner carSpawner;
     [SerializeField] private ScoreSystem scoreSystem;
+    [SerializeField] private SimpleCountDownTimer timer;
 
     void Update()
     {
-        // TODO: Remove after implementing event system
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            scoreSystem.IncreaseScore(1f);
-        }
-
         if (Input.GetKeyDown(KeyCode.Q))
         {
             raceTrack.CreateRaceTrack();
@@ -32,11 +28,17 @@ public class Main : MonoBehaviour
             Debug.Log($"Start: {start}, direction: {direction}");
             StartCoroutine(carSpawner.spawnCar(start, direction));
             raceTrack.checkpointReached.AddListener(OnCheckpointReached);
+            timer.timeoutEvent.AddListener(OnTimeElapsed);
         }
     }
 
     private void OnCheckpointReached()
     {
         scoreSystem.IncreaseScore(checkpointReward);
+    }
+
+    private void OnTimeElapsed()
+    {
+        scoreSystem.DecreaseScore(timeElapsedPenalty);
     }
 }
