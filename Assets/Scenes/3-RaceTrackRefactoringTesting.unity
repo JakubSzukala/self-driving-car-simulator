@@ -265,7 +265,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14cd8ea2d159de102977117b86d2a923, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roadWidth: 1
+  roadWidth: 1.5
   roadMaterial: {fileID: 2100000, guid: 00da64a200865559781e2e55ee74114b, type: 2}
 --- !u!23 &171356633
 MeshRenderer:
@@ -387,7 +387,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wallHeight: 1
-  roadWidth: 1
+  roadWidth: 1.5
   wallMaterial: {fileID: 2100000, guid: 75fd7f2299865a55f8d009ee5eece9e9, type: 2}
   side: 0
 --- !u!64 &660946108
@@ -510,7 +510,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wallHeight: 1
-  roadWidth: 1
+  roadWidth: 1.5
   wallMaterial: {fileID: 2100000, guid: 75fd7f2299865a55f8d009ee5eece9e9, type: 2}
   side: 1
 --- !u!64 &704673790
@@ -629,7 +629,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6dbf6d46266b7d7091269785983a41d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  checkPointPrefab: {fileID: 1679332706}
+  checkPointPrefab: {fileID: 1590395722874367656, guid: a7eb1ca6364113f12a74031c617917fe, type: 3}
 --- !u!1 &1107370251
 GameObject:
   m_ObjectHideFlags: 0
@@ -987,69 +987,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1679332706 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1590395722874367656, guid: a7eb1ca6364113f12a74031c617917fe, type: 3}
-  m_PrefabInstance: {fileID: 8032243306408230716}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &8032243306408230716
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1590395722874367656, guid: a7eb1ca6364113f12a74031c617917fe, type: 3}
-      propertyPath: m_Name
-      value: CheckPoint
-      objectReference: {fileID: 0}
-    - target: {fileID: 6022717945099967318, guid: a7eb1ca6364113f12a74031c617917fe, type: 3}
-      propertyPath: m_RootOrder
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6022717945099967318, guid: a7eb1ca6364113f12a74031c617917fe, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6022717945099967318, guid: a7eb1ca6364113f12a74031c617917fe, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6022717945099967318, guid: a7eb1ca6364113f12a74031c617917fe, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6022717945099967318, guid: a7eb1ca6364113f12a74031c617917fe, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6022717945099967318, guid: a7eb1ca6364113f12a74031c617917fe, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6022717945099967318, guid: a7eb1ca6364113f12a74031c617917fe, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6022717945099967318, guid: a7eb1ca6364113f12a74031c617917fe, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6022717945099967318, guid: a7eb1ca6364113f12a74031c617917fe, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6022717945099967318, guid: a7eb1ca6364113f12a74031c617917fe, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6022717945099967318, guid: a7eb1ca6364113f12a74031c617917fe, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: a7eb1ca6364113f12a74031c617917fe, type: 3}

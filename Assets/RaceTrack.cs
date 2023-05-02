@@ -1,14 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class RaceTrack : MonoBehaviour
 {
+    private Vector2[] path;
     private IPathCreator raceTrackPathCreator;
     private IRaceTrackFullRenderable raceTrackRenderer;
     [SerializeField] private CheckPointSpawner checkPointSpawner;
-
-    private Vector2[] path;
+    public UnityEvent checkpointReached;
 
     void Awake()
     {
@@ -43,6 +44,7 @@ public class RaceTrack : MonoBehaviour
 
     public void CreateRaceTrackCheckPoints()
     {
+        // Instantiate
         for (int i = 0; i < path.Length; i++)
         {
             int nextIndex = (i + 1) % path.Length;
@@ -50,7 +52,8 @@ public class RaceTrack : MonoBehaviour
             Vector3 direction = path[nextIndex] - path[i];
             direction = new Vector3(direction.x, 0, direction.y);
             direction.Normalize();
-            StartCoroutine(checkPointSpawner.SpawnCheckPoint(pointXZ, direction));
+            float width = GetComponentInChildren<RoadRenderer>().roadWidth;
+            StartCoroutine(checkPointSpawner.SpawnCheckPoint(pointXZ, direction, width));
         }
     }
 }

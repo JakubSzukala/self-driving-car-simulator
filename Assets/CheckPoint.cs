@@ -1,18 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CheckPoint : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private UnityEvent checkpointReached;
+    void Awake()
     {
-        
+        // Get reference to event
+        checkpointReached = GameObject.FindGameObjectWithTag("RaceTrack").GetComponent<RaceTrack>().checkpointReached;
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnTriggerEnter(Collider other)
     {
-        
+        if (other.CompareTag("Car"))
+        {
+            checkpointReached.Invoke();
+            Destroy(gameObject);
+        }
     }
 }

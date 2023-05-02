@@ -8,7 +8,7 @@ using System.Linq;
 public class RoadRenderer : MonoBehaviour, IRaceTrackPartRenderable
 {
     // DI fields
-    [SerializeField] private float roadWidth = 1f;
+    [SerializeField] public float roadWidth = 1f; // TODO: Change this to property, private set public get
     [SerializeField] private Material roadMaterial;
 
     // Mesh parameters
