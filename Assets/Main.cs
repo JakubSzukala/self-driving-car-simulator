@@ -17,15 +17,13 @@ public class Main : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            raceTrack.CreateRaceTrack();
-            raceTrack.CreateRaceTrackCheckPoints();
+            raceTrack.CreateRaceTrack(true);
         }
 
         if (Input.GetKeyDown(KeyCode.A))
         {
             Vector3 start, direction;
             raceTrack.GetRaceTrackStart(out start, out direction);
-            Debug.Log($"Start: {start}, direction: {direction}");
             StartCoroutine(carSpawner.spawnCar(start, direction));
             raceTrack.checkpointReached.AddListener(OnCheckpointReached);
             timer.timeoutEvent.AddListener(OnTimeElapsed);

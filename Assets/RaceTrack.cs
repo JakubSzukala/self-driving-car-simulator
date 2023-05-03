@@ -5,10 +5,11 @@ using UnityEngine.Events;
 
 public class RaceTrack : MonoBehaviour
 {
-    private Vector2[] path;
+    private Vector2[] path; // TODO: I am not sure if this should be stored here
     private IPathCreator raceTrackPathCreator;
     private IRaceTrackFullRenderable raceTrackRenderer;
     [SerializeField] private CheckPointSpawner checkPointSpawner;
+    [SerializeField] private GameObject checkPointContainer;
     public UnityEvent checkpointReached;
 
     void Awake()
@@ -19,7 +20,7 @@ public class RaceTrack : MonoBehaviour
 
     // TODO: Make so that values can be set in race track and then passed
     // down the hierarchy, values like race track width, wall height, concavity etc
-    public void CreateRaceTrack()
+    public void CreateRaceTrack(bool addCheckPoints)
     {
         bool renderIsValid;
         do
@@ -30,6 +31,17 @@ public class RaceTrack : MonoBehaviour
         }
         while (!renderIsValid);
         raceTrackRenderer.RenderTrack();
+
+        // Destroy leftover checkpoints
+        if (checkPointContainer.transform.childCount > 0)
+        {
+            DestroyRaceTrackCheckPoints();
+        }
+
+        if (addCheckPoints)
+        {
+            CreateRaceTrackCheckPoints();
+        }
     }
 
     public void GetRaceTrackStart(out Vector3 start, out Vector3 direction)
@@ -53,6 +65,14 @@ public class RaceTrack : MonoBehaviour
             direction.Normalize();
             float width = GetComponentInChildren<RoadRenderer>().roadWidth;
             StartCoroutine(checkPointSpawner.SpawnCheckPoint(pointXZ, direction, width));
+        }
+    }
+
+    public void DestroyRaceTrackCheckPoints()
+    {
+        for (int i = 0; i < checkPointContainer.transform.childCount; i++)
+        {
+            Destroy(checkPointContainer.transform.GetChild(i).gameObject);
         }
     }
 }

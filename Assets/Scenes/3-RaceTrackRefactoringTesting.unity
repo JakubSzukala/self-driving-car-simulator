@@ -200,6 +200,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkPointSpawner: {fileID: 818727073}
+  checkPointContainer: {fileID: 915901387}
   checkpointReached:
     m_PersistentCalls:
       m_Calls: []
@@ -218,6 +219,7 @@ Transform:
   - {fileID: 1219094528}
   - {fileID: 144530830}
   - {fileID: 818727072}
+  - {fileID: 915901388}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -728,6 +730,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkPointPrefab: {fileID: 1590395722874367656, guid: a7eb1ca6364113f12a74031c617917fe, type: 3}
+  checkPointContainer: {fileID: 915901387}
+--- !u!1 &915901387
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 915901388}
+  m_Layer: 0
+  m_Name: RaceTrackCheckPointContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &915901388
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 915901387}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 145761720}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1107370251
 GameObject:
   m_ObjectHideFlags: 0
