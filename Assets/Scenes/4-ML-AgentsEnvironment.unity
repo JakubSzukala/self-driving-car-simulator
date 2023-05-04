@@ -123,6 +123,55 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &109403311
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 109403313}
+  - component: {fileID: 109403312}
+  m_Layer: 0
+  m_Name: PenaltyTimer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &109403312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 109403311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ff467ccb0ba1661ea8c8d07e7de84a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeoutEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  startTime: 1
+  loop: 1
+--- !u!4 &109403313
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 109403311}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 29.710262, y: 0, z: 60.92485}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &144530829
 GameObject:
   m_ObjectHideFlags: 0
@@ -797,6 +846,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7423132734400595442, guid: 1633973783e1d9935adc6bc117ab457d, type: 3}
   m_PrefabInstance: {fileID: 856712474}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &856712480 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5006245756392449245, guid: 1633973783e1d9935adc6bc117ab457d, type: 3}
+  m_PrefabInstance: {fileID: 856712474}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &915901387
 GameObject:
   m_ObjectHideFlags: 0
@@ -1202,7 +1256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 555e395f453a79e44b909d2fd10efc05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  target: {fileID: 856712480}
   Distance: 10
   Offset: 0
   Height: 5
@@ -1360,6 +1414,55 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1325914810
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1325914812}
+  - component: {fileID: 1325914811}
+  m_Layer: 0
+  m_Name: EpisodeTimer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1325914811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1325914810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ff467ccb0ba1661ea8c8d07e7de84a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeoutEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  startTime: 30
+  loop: 1
+--- !u!4 &1325914812
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1325914810}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 29.710262, y: 0, z: 60.92485}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1350931795
 GameObject:
   m_ObjectHideFlags: 0
@@ -1371,6 +1474,7 @@ GameObject:
   - component: {fileID: 1350931798}
   - component: {fileID: 1350931797}
   - component: {fileID: 1350931796}
+  - component: {fileID: 1350931799}
   m_Layer: 0
   m_Name: Agent
   m_TagString: Untagged
@@ -1394,12 +1498,17 @@ MonoBehaviour:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
+  maxAcceleration: 1.5
+  maxSteerAngle: 35
   checkpointReward: 1
+  trackFinishedReward: 10
   timeElapsedPenalty: 0.1
+  discrete: 0
   raceTrack: {fileID: 145761719}
   carSpawner: {fileID: 1107370252}
   scoreSystem: {fileID: 156555716}
-  timer: {fileID: 250734388}
+  penaltyTimer: {fileID: 109403312}
+  episodeTimer: {fileID: 1325914811}
   agentCar: {fileID: 856712475}
 --- !u!114 &1350931797
 MonoBehaviour:
@@ -1414,19 +1523,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 1
+    VectorObservationSize: 1081
     NumStackedVectorObservations: 1
     m_ActionSpec:
-      m_NumContinuousActions: 0
-      BranchSizes: 01000000
-    VectorActionSize: 01000000
+      m_NumContinuousActions: 2
+      BranchSizes: 
+    VectorActionSize: 02000000
     VectorActionDescriptions: []
-    VectorActionSpaceType: 0
+    VectorActionSpaceType: 1
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 0}
   m_InferenceDevice: 0
-  m_BehaviorType: 0
-  m_BehaviorName: My Behavior
+  m_BehaviorType: 1
+  m_BehaviorName: AgentCar
   TeamId: 0
   m_UseChildSensors: 1
   m_UseChildActuators: 1
@@ -1446,6 +1555,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1350931799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1350931795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DecisionPeriod: 10
+  TakeActionsBetweenDecisions: 1
 --- !u!1 &1450418999
 GameObject:
   m_ObjectHideFlags: 0
