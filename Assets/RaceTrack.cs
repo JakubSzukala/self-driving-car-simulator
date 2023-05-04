@@ -9,7 +9,7 @@ public class RaceTrack : MonoBehaviour
     private IPathCreator raceTrackPathCreator;
     private IRaceTrackFullRenderable raceTrackRenderer;
     [SerializeField] private CheckPointSpawner checkPointSpawner;
-    [SerializeField] private GameObject checkPointContainer;
+    [SerializeField] public GameObject checkPointContainer;
     public UnityEvent checkpointReached;
 
     void Awake()
@@ -22,6 +22,7 @@ public class RaceTrack : MonoBehaviour
     // down the hierarchy, values like race track width, wall height, concavity etc
     public void CreateRaceTrack(bool addCheckPoints)
     {
+        Debug.Log("Call");
         bool renderIsValid;
         do
         {
@@ -64,7 +65,7 @@ public class RaceTrack : MonoBehaviour
             direction = new Vector3(direction.x, 0, direction.y);
             direction.Normalize();
             float width = GetComponentInChildren<RoadRenderer>().roadWidth;
-            StartCoroutine(checkPointSpawner.SpawnCheckPoint(pointXZ, direction, width));
+            checkPointSpawner.SpawnCheckPoint(pointXZ, direction, width);
         }
     }
 
