@@ -731,6 +731,72 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   checkPointPrefab: {fileID: 1590395722874367656, guid: a7eb1ca6364113f12a74031c617917fe, type: 3}
   checkPointContainer: {fileID: 915901387}
+--- !u!1001 &856712474
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5006245756392449245, guid: 1633973783e1d9935adc6bc117ab457d, type: 3}
+      propertyPath: m_RootOrder
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5006245756392449245, guid: 1633973783e1d9935adc6bc117ab457d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5006245756392449245, guid: 1633973783e1d9935adc6bc117ab457d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5006245756392449245, guid: 1633973783e1d9935adc6bc117ab457d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5006245756392449245, guid: 1633973783e1d9935adc6bc117ab457d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5006245756392449245, guid: 1633973783e1d9935adc6bc117ab457d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5006245756392449245, guid: 1633973783e1d9935adc6bc117ab457d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5006245756392449245, guid: 1633973783e1d9935adc6bc117ab457d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5006245756392449245, guid: 1633973783e1d9935adc6bc117ab457d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5006245756392449245, guid: 1633973783e1d9935adc6bc117ab457d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5006245756392449245, guid: 1633973783e1d9935adc6bc117ab457d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7423132734400595442, guid: 1633973783e1d9935adc6bc117ab457d, type: 3}
+      propertyPath: m_Name
+      value: F1TenthSimplified
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1633973783e1d9935adc6bc117ab457d, type: 3}
+--- !u!1 &856712475 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7423132734400595442, guid: 1633973783e1d9935adc6bc117ab457d, type: 3}
+  m_PrefabInstance: {fileID: 856712474}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &915901387
 GameObject:
   m_ObjectHideFlags: 0
@@ -1334,6 +1400,7 @@ MonoBehaviour:
   carSpawner: {fileID: 1107370252}
   scoreSystem: {fileID: 156555716}
   timer: {fileID: 250734388}
+  agentCar: {fileID: 856712475}
 --- !u!114 &1350931797
 MonoBehaviour:
   m_ObjectHideFlags: 0
