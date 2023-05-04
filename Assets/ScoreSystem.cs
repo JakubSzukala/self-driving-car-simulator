@@ -28,6 +28,8 @@ public class ScoreSystem : MonoBehaviour
         UIScoreUpdate();
     }
 
+    public void ResetScore() => Score = 0f;
+
     private void UIScoreUpdate()
     {
         UIScore.text = $"Score: {Score}";
