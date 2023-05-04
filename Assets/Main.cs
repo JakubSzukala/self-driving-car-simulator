@@ -27,6 +27,7 @@ public class Main : MonoBehaviour
             StartCoroutine(carSpawner.spawnCar(start, direction));
             raceTrack.checkpointReached.AddListener(OnCheckpointReached);
             timer.timeoutEvent.AddListener(OnTimeElapsed);
+            timer.StartTimer();
         }
     }
 

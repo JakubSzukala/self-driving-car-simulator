@@ -9,9 +9,11 @@ public class SimpleCountDownTimer : MonoBehaviour
     private float targetTime = 1f;
     public float startTime = 1f;
     public bool loop = true;
+    private bool running = false;
 
     void Update()
     {
+        if (!running) return;
         if (targetTime > 0)
         {
             targetTime -= Time.deltaTime;
@@ -21,6 +23,16 @@ public class SimpleCountDownTimer : MonoBehaviour
             timeoutEvent.Invoke();
             if (loop) ResetTimer();
         }
+    }
+
+    public void StartTimer()
+    {
+        running = true;
+    }
+
+    public void StopTimer()
+    {
+        running = false;
     }
 
     public void ResetTimer()
