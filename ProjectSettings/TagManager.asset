@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Car
   - RaceTrack
+  - AgentCar
   layers:
   - Default
   - TransparentFX

@@ -1426,7 +1426,7 @@ GameObject:
   - component: {fileID: 7423132734400595441}
   m_Layer: 6
   m_Name: F1TenthSimplified
-  m_TagString: Car
+  m_TagString: AgentCar
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
