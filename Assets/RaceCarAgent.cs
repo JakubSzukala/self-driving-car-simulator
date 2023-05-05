@@ -30,7 +30,7 @@ public class RaceCarAgent : Agent
     [SerializeField] private SimpleCountDownTimer episodeTimer;
 
     // Agent
-    [SerializeField] private GameObject agentCar;
+    private GameObject agentCar;
 
     // Lidar interface
     private LidarDataSubscriber lidarDataSubscriber;
@@ -40,8 +40,6 @@ public class RaceCarAgent : Agent
 
     void Awake()
     {
-        agentCar = GameObject.FindGameObjectWithTag("AgentCar");
-        lidarDataSubscriber = new LidarDataSubscriber(agentCar.GetComponentInChildren<LidarSensor>());
         raceTrack.checkpointReached.AddListener(OnCheckpointReached);
         penaltyTimer.timeoutEvent.AddListener(OnTimePenalty);
         episodeTimer.timeoutEvent.AddListener(OnEpisodeEnd);
@@ -50,14 +48,16 @@ public class RaceCarAgent : Agent
     public override void OnEpisodeBegin()
     {
         // Spawn race track
-        //raceTrack.DestroyRaceTrackCheckPoints();
         raceTrack.CreateRaceTrack(true);
 
         // Set the agent car at the start
         Vector3 start, direction;
         raceTrack.GetRaceTrackStart(out start, out direction);
-        agentCar.transform.position = start;
-        agentCar.transform.rotation = Quaternion.LookRotation(direction);
+
+        // Instantiate a car and get reference to it and assign lidar subscriber
+        GameObject.Destroy(agentCar);
+        agentCar = carSpawner.spawnCar(start, direction);
+        lidarDataSubscriber = new LidarDataSubscriber(agentCar.GetComponentInChildren<LidarSensor>());
 
         // Start timers
         penaltyTimer.StartTimer();
@@ -79,6 +79,7 @@ public class RaceCarAgent : Agent
         agentCar.GetComponent<Vehicle>().SteerAngleInput = controlSignalSteer;
 
         // Reward
+        // TODO: This could be moved to score system
         float scoreIncrement = scoreSystem.Score - prevScore;
         prevScore = scoreSystem.Score;
 
@@ -92,7 +93,6 @@ public class RaceCarAgent : Agent
             AddReward(trackFinishedReward);
             EndEpisode();
             EpisodeCleanup();
-            Debug.Log("Endj");
         }
 
         // Maybe little bit clearer would be if episode timeout would be stated here
@@ -100,13 +100,9 @@ public class RaceCarAgent : Agent
 
     private void EpisodeCleanup()
     {
-        // Reset velocities
-        agentCar.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-        agentCar.GetComponent<Rigidbody>().velocity = Vector3.zero;
-
         // Reset timers
-        episodeTimer.ResetTimer(); episodeTimer.StopTimer();
-        penaltyTimer.ResetTimer(); penaltyTimer.StopTimer();
+        episodeTimer.StopTimer(); episodeTimer.ResetTimer();
+        penaltyTimer.StopTimer(); penaltyTimer.ResetTimer();
 
         // Reset score system
         scoreSystem.ResetScore();
@@ -136,6 +132,5 @@ public class RaceCarAgent : Agent
     {
         EndEpisode();
         EpisodeCleanup();
-        Debug.Log("Endj");
     }
 }
