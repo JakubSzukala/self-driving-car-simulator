@@ -1447,7 +1447,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   startTime: 30
-  loop: 1
+  loop: 0
 --- !u!4 &1325914812
 Transform:
   m_ObjectHideFlags: 0

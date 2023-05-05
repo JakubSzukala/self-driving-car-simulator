@@ -11,6 +11,11 @@ public class SimpleCountDownTimer : MonoBehaviour
     public bool loop = true;
     private bool running = false;
 
+    void Start()
+    {
+        targetTime = startTime;
+    }
+
     void Update()
     {
         if (!running) return;
