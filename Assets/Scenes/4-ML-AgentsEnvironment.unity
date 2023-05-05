@@ -155,8 +155,10 @@ MonoBehaviour:
   timeoutEvent:
     m_PersistentCalls:
       m_Calls: []
+  targetTime: 1
   startTime: 1
   loop: 1
+  running: 0
 --- !u!4 &109403313
 Transform:
   m_ObjectHideFlags: 0
@@ -471,8 +473,10 @@ MonoBehaviour:
   timeoutEvent:
     m_PersistentCalls:
       m_Calls: []
+  targetTime: 1
   startTime: 1
   loop: 1
+  running: 0
 --- !u!4 &250734389
 Transform:
   m_ObjectHideFlags: 0
@@ -1329,8 +1333,10 @@ MonoBehaviour:
   timeoutEvent:
     m_PersistentCalls:
       m_Calls: []
-  startTime: 3
+  targetTime: 1
+  startTime: 30
   loop: 0
+  running: 0
 --- !u!4 &1325914812
 Transform:
   m_ObjectHideFlags: 0
