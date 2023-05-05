@@ -54,7 +54,7 @@ public class RaceCarAgent : Agent
         Vector3 start, direction;
         raceTrack.GetRaceTrackStart(out start, out direction);
 
-        // Instantiate a car and get reference to it and assign lidar subscriber
+        // Instantiate a car, get reference to it and assign lidar subscriber
         GameObject.Destroy(agentCar);
         agentCar = carSpawner.spawnCar(start, direction);
         lidarDataSubscriber = new LidarDataSubscriber(agentCar.GetComponentInChildren<LidarSensor>());
@@ -91,8 +91,8 @@ public class RaceCarAgent : Agent
         if(raceTrack.checkPointContainer.transform.childCount == 0)
         {
             AddReward(trackFinishedReward);
-            EndEpisode();
             EpisodeCleanup();
+            EndEpisode();
         }
 
         // Maybe little bit clearer would be if episode timeout would be stated here
@@ -130,7 +130,8 @@ public class RaceCarAgent : Agent
 
     private void OnEpisodeEnd()
     {
-        EndEpisode();
+        // TODO: Add reward at this point?
         EpisodeCleanup();
+        EndEpisode();
     }
 }
