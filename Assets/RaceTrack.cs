@@ -22,7 +22,6 @@ public class RaceTrack : MonoBehaviour
     // down the hierarchy, values like race track width, wall height, concavity etc
     public void CreateRaceTrack(bool addCheckPoints)
     {
-        Debug.Log("Call");
         bool renderIsValid;
         do
         {
