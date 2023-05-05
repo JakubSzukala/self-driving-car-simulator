@@ -7,9 +7,8 @@ public class CarSpawner : MonoBehaviour
     [SerializeField] private GameObject carPrefab;
     [SerializeField] private GameObject mainCamera;
 
-    public IEnumerator spawnCar(Vector3 position, Vector3 direction)
+    public GameObject spawnCar(Vector3 position, Vector3 direction)
     {
-        yield return new WaitForEndOfFrame();
         GameObject newCar = Instantiate(carPrefab, position, Quaternion.LookRotation(direction));
 
         // If camera has a follow script attach it to the car
@@ -18,5 +17,7 @@ public class CarSpawner : MonoBehaviour
         {
             cameraFollower.target = newCar.transform;
         }
+
+        return newCar;
     }
 }

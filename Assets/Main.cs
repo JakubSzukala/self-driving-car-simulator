@@ -24,7 +24,7 @@ public class Main : MonoBehaviour
         {
             Vector3 start, direction;
             raceTrack.GetRaceTrackStart(out start, out direction);
-            StartCoroutine(carSpawner.spawnCar(start, direction));
+            carSpawner.spawnCar(start, direction);
             raceTrack.checkpointReached.AddListener(OnCheckpointReached);
             timer.timeoutEvent.AddListener(OnTimeElapsed);
             timer.StartTimer();
