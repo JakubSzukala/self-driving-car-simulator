@@ -21,7 +21,10 @@ for step in steps:
     print(step.obs)
 
 for i in range(100):
-    print("Step: ", i)
+    #print("Step: ", i)
+    steps = env.get_steps(behavior_name)
+    for step in steps:
+        print(np.unique(step.obs))
     action = behavior_spec.action_spec.random_action(1)
     env.set_actions(behavior_name, action)
     env.step()
