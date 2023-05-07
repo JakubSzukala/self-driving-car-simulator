@@ -17,7 +17,7 @@ public class RaceCarAgent : Agent
     // Rewards and penalties
     [SerializeField] private float checkpointReward = 1f;
     [SerializeField] private float trackFinishedReward = 10f;
-    [SerializeField] private float timeElapsedPenalty = .1f;
+    [SerializeField] private float timeElapsedPenalty = -.1f;
     [SerializeField] private float agentFellOffPenalty = -100f;
 
     // Discrete or continous flag
@@ -26,18 +26,15 @@ public class RaceCarAgent : Agent
     // Relevant GameObjects
     [SerializeField] private RaceTrack raceTrack;
     [SerializeField] private CarSpawner carSpawner;
-    [SerializeField] private ScoreSystem scoreSystem;
     [SerializeField] private SimpleCountDownTimer penaltyTimer;
     [SerializeField] private SimpleCountDownTimer episodeTimer;
+    [SerializeField] private ScoreSystem scoreUI; // TODO: Simplify it so it actually only is ui
 
     // Agent
     private GameObject agentCar;
 
     // Lidar interface
     private LidarDataSubscriber lidarDataSubscriber;
-
-    // Kepping track of score increments
-    private float prevScore = 0f;
 
     void Awake()
     {
@@ -79,13 +76,6 @@ public class RaceCarAgent : Agent
         agentCar.GetComponent<Vehicle>().AccelerationInput = controlSignalAcc;
         agentCar.GetComponent<Vehicle>().SteerAngleInput = controlSignalSteer;
 
-        // Reward
-        // TODO: This could be moved to score system
-        // TODO: Maybe remove this score system if it bypassed anyway
-        float scoreIncrement = scoreSystem.Score - prevScore;
-        prevScore = scoreSystem.Score;
-        AddReward(scoreIncrement);
-
         // If all checkpoints were scored add big reward
         if(raceTrack.checkPointContainer.transform.childCount == 0)
         {
@@ -102,7 +92,7 @@ public class RaceCarAgent : Agent
             EndEpisode();
         }
 
-        // Maybe little bit clearer would be if episode timeout would be stated here
+        scoreUI.Score = GetCumulativeReward();
     }
 
     private void EpisodeCleanup()
@@ -110,10 +100,6 @@ public class RaceCarAgent : Agent
         // Reset timers
         episodeTimer.StopTimer(); episodeTimer.ResetTimer();
         penaltyTimer.StopTimer(); penaltyTimer.ResetTimer();
-
-        // Reset score system
-        scoreSystem.ResetScore();
-        prevScore = 0f;
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -128,12 +114,12 @@ public class RaceCarAgent : Agent
     private void OnCheckpointReached()
     {
         float scaledReward = checkpointReward / (float) raceTrack.checkPointContainer.transform.childCount;
-        scoreSystem.IncreaseScore(scaledReward);
+        AddReward(scaledReward);
     }
 
     private void OnTimePenalty()
     {
-        scoreSystem.DecreaseScore(timeElapsedPenalty);
+        AddReward(timeElapsedPenalty);
     }
 
     private void OnEpisodeEnd()

@@ -155,7 +155,7 @@ MonoBehaviour:
   timeoutEvent:
     m_PersistentCalls:
       m_Calls: []
-  startTime: 1
+  startTime: 0.03333334
   loop: 1
   running: 0
 --- !u!4 &109403313
@@ -1388,16 +1388,16 @@ MonoBehaviour:
   MaxStep: 0
   maxAcceleration: 1.5
   maxSteerAngle: 35
-  checkpointReward: 1
-  trackFinishedReward: 10
-  timeElapsedPenalty: 0.1
-  agentFellOffPenalty: 100
+  checkpointReward: 1000
+  trackFinishedReward: 1500
+  timeElapsedPenalty: -0.1
+  agentFellOffPenalty: -100
   discrete: 0
   raceTrack: {fileID: 145761719}
   carSpawner: {fileID: 1549050501}
-  scoreSystem: {fileID: 156555716}
   penaltyTimer: {fileID: 109403312}
   episodeTimer: {fileID: 1325914811}
+  scoreUI: {fileID: 156555716}
 --- !u!114 &1350931797
 MonoBehaviour:
   m_ObjectHideFlags: 0
