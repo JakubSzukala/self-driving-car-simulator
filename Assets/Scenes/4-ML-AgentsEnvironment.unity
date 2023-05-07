@@ -155,7 +155,6 @@ MonoBehaviour:
   timeoutEvent:
     m_PersistentCalls:
       m_Calls: []
-  targetTime: 1
   startTime: 1
   loop: 1
   running: 0
@@ -473,7 +472,6 @@ MonoBehaviour:
   timeoutEvent:
     m_PersistentCalls:
       m_Calls: []
-  targetTime: 1
   startTime: 1
   loop: 1
   running: 0
@@ -543,6 +541,7 @@ MonoBehaviour:
   roadWidth: 1.5
   wallMaterial: {fileID: 2100000, guid: 75fd7f2299865a55f8d009ee5eece9e9, type: 2}
   side: 0
+  wallCollision: 0
 --- !u!64 &660946108
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -666,6 +665,7 @@ MonoBehaviour:
   roadWidth: 1.5
   wallMaterial: {fileID: 2100000, guid: 75fd7f2299865a55f8d009ee5eece9e9, type: 2}
   side: 1
+  wallCollision: 0
 --- !u!64 &704673790
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1333,7 +1333,6 @@ MonoBehaviour:
   timeoutEvent:
     m_PersistentCalls:
       m_Calls: []
-  targetTime: 1
   startTime: 30
   loop: 0
   running: 0
@@ -1392,6 +1391,7 @@ MonoBehaviour:
   checkpointReward: 1
   trackFinishedReward: 10
   timeElapsedPenalty: 0.1
+  agentFellOffPenalty: 100
   discrete: 0
   raceTrack: {fileID: 145761719}
   carSpawner: {fileID: 1549050501}
