@@ -1,5 +1,6 @@
 import numpy as np
 from mlagents_envs.environment import UnityEnvironment
+from stable_baselines3 import PPO
 
 #env = UnityEnvironment(file_name="../environment.x86_64", seed=1, side_channels=[])
 env = UnityEnvironment(file_name=None, seed=1, side_channels=[])
@@ -28,3 +29,5 @@ for i in range(100):
     action = behavior_spec.action_spec.random_action(1)
     env.set_actions(behavior_name, action)
     env.step()
+
+env.close()
