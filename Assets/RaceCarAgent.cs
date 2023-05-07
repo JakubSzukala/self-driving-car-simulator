@@ -18,6 +18,7 @@ public class RaceCarAgent : Agent
     [SerializeField] private float checkpointReward = 1f;
     [SerializeField] private float trackFinishedReward = 10f;
     [SerializeField] private float timeElapsedPenalty = .1f;
+    [SerializeField] private float agentFellOffPenalty = 100f;
 
     // Discrete or continous flag
     [SerializeField] private bool discrete = true;
@@ -80,12 +81,10 @@ public class RaceCarAgent : Agent
 
         // Reward
         // TODO: This could be moved to score system
+        // TODO: Maybe remove this score system if it bypassed anyway
         float scoreIncrement = scoreSystem.Score - prevScore;
         prevScore = scoreSystem.Score;
-
         AddReward(scoreIncrement);
-
-        // TODO: Add early stopping here if the agent does nothing
 
         // If all checkpoints were scored add big reward
         if(raceTrack.checkPointContainer.transform.childCount == 0)
@@ -93,6 +92,12 @@ public class RaceCarAgent : Agent
             AddReward(trackFinishedReward);
             EpisodeCleanup();
             EndEpisode();
+        }
+
+        // If wall collision is disabled, car can fall out of track, add penalty for that
+        if (agentCar.transform.position.y < 0)
+        {
+            AddReward(agentFellOffPenalty);
         }
 
         // Maybe little bit clearer would be if episode timeout would be stated here
@@ -131,7 +136,6 @@ public class RaceCarAgent : Agent
 
     private void OnEpisodeEnd()
     {
-        // TODO: Add reward at this point?
         EpisodeCleanup();
         EndEpisode();
     }

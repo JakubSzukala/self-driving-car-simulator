@@ -19,6 +19,7 @@ public class WallRenderer : MonoBehaviour, IRaceTrackPartRenderable
     [SerializeField] private float roadWidth = 1f;
     [SerializeField] private Material wallMaterial;
     [SerializeField] private WallSide side = WallSide.Left;
+    [SerializeField] private bool wallCollision = true;
 
     // Mesh parameters
     private int pathLength;
@@ -88,7 +89,7 @@ public class WallRenderer : MonoBehaviour, IRaceTrackPartRenderable
     {
         GetComponent<MeshFilter>().mesh = mesh;
         GetComponent<MeshRenderer>().material = wallMaterial;
-        GetComponent<MeshCollider>().sharedMesh = mesh;
+        if (wallCollision) GetComponent<MeshCollider>().sharedMesh = mesh;
     }
 
     public void Reset()
