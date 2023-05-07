@@ -1,13 +1,18 @@
 from datetime import datetime
 from os.path import join
+
 from mlagents_envs.envs.unity_gym_env import UnityToGymWrapper
 from mlagents_envs.environment import UnityEnvironment
+from mlagents_envs.side_channel.engine_configuration_channel import EngineConfigurationChannel
+
 from stable_baselines3 import PPO
 from stable_baselines3.common.callbacks import EvalCallback
 from stable_baselines3.common.callbacks import CheckpointCallback
-from stable_baselines3.common.callbacks import EveryNTimesteps
 
-unity_env = UnityEnvironment(file_name=None, seed=1, side_channels=[])
+engine_config_channel = EngineConfigurationChannel()
+unity_env = UnityEnvironment(file_name=None, seed=1, side_channels=[engine_config_channel])
+engine_config_channel.set_configuration_parameters(time_scale=2.0)
+
 env = UnityToGymWrapper(
     unity_env,
     False,
@@ -44,6 +49,6 @@ checkpoint_callback = CheckpointCallback(
 
 # Instantiate and start learning loop
 model = PPO("MlpPolicy", env, verbose=1, tensorboard_log="tensorboard")
-model.learn(total_timesteps=1500, callback=[eval_callback, checkpoint_callback])
+model.learn(total_timesteps=45000, callback=[eval_callback, checkpoint_callback], progress_bar=True)
 
 unity_env.close()
