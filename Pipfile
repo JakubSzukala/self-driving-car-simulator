@@ -9,6 +9,8 @@ mlagents-envs = "==0.30.0"
 protobuf = "==3.20.3"
 setuptools = "==57.1.0"
 stable-baselines3 = "*"
+tqdm = "*"
+rich = "*"
 
 [dev-packages]
 
