@@ -120,7 +120,8 @@ public class RaceCarAgent : Agent
     // Callbacks
     private void OnCheckpointReached()
     {
-        scoreSystem.IncreaseScore(checkpointReward);
+        float scaledReward = checkpointReward / (float) raceTrack.checkPointContainer.transform.childCount;
+        scoreSystem.IncreaseScore(scaledReward);
     }
 
     private void OnTimePenalty()
