@@ -5,8 +5,16 @@ using UnityEngine;
 
 public class ScoreSystem : MonoBehaviour
 {
+    private float score;
     public float Score
-    { get; private set; }
+    {
+        get { return score; }
+        set
+        {
+            score = value;
+            UIScoreUpdate();
+        }
+    }
 
     [SerializeField] private TMP_Text UIScore;
 
