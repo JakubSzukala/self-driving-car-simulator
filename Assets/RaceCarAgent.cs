@@ -19,6 +19,7 @@ public class RaceCarAgent : Agent
     [SerializeField] private float trackFinishedReward = 10f;
     [SerializeField] private float timeElapsedPenalty = -.1f;
     [SerializeField] private float agentFellOffPenalty = -100f;
+    [SerializeField] private float minScoreThreshold = -10f;
 
     // Discrete or continous flag
     [SerializeField] private bool discrete = true;
@@ -92,7 +93,13 @@ public class RaceCarAgent : Agent
             EndEpisode();
         }
 
-        scoreUI.Score = GetCumulativeReward();
+        float score = GetCumulativeReward();
+        scoreUI.Score = score;
+        if (score <= minScoreThreshold)
+        {
+            EpisodeCleanup();
+            EndEpisode();
+        }
     }
 
     private void EpisodeCleanup()
