@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public class SimpleCountDownTimer : MonoBehaviour
 {
     public UnityEvent timeoutEvent;
-    [SerializeField] private float targetTime = 1f;
+    private float targetTime = 1f;
     public float startTime = 1f;
     [SerializeField] public bool loop = true;
     [SerializeField] private bool running = false;

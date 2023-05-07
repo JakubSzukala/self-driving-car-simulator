@@ -18,7 +18,7 @@ public class RaceCarAgent : Agent
     [SerializeField] private float checkpointReward = 1f;
     [SerializeField] private float trackFinishedReward = 10f;
     [SerializeField] private float timeElapsedPenalty = .1f;
-    [SerializeField] private float agentFellOffPenalty = 100f;
+    [SerializeField] private float agentFellOffPenalty = -100f;
 
     // Discrete or continous flag
     [SerializeField] private bool discrete = true;
