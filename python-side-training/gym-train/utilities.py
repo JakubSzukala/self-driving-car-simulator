@@ -73,12 +73,13 @@ def prep_model(rl_algorithm: str, action: str, env: UnityToGymWrapper, model_pat
     return new_model
 
 
-def prep_logfile_name(rl_algorithm: str) -> Tuple[str, str]:
+def prep_logfile_names(rl_algorithm: str) -> Tuple[str, str]:
     now = datetime.now()
     date_string = now.strftime("%d-%m-%Y-%H-%M-%S")
     filename_best = rl_algorithm + "-" + "MlpPolicy" + "-" + date_string + "_best"
-    filename_checkpoint = rl_algorithm + "-" + "MlpPolicy" + "-" + date_string + "checkpoint"
-    return filename_best, filename_checkpoint
+    filename_checkpoint = rl_algorithm + "-" + "MlpPolicy" + "-" + date_string + "_checkpoint"
+    tb_log_filename = rl_algorithm + "-" + "MlpPolicy" + "-" + date_string + "_tb_log"
+    return filename_best, filename_checkpoint, tb_log_filename
 
 
 def prep_callbacks(env: UnityToGymWrapper, filename_best: str, filename_checkpoint: str) -> Tuple[EvalCallback, CheckpointCallback]:

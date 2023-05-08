@@ -4,10 +4,12 @@ import argparse
 from utilities import *
 
 # CLI initialization
-usage_message ="""Example usage:
+usage_message ="""
+
 - Evaluate trained PPO model: python3 gym_interface.py --action eval --rl_algorithm PPO --model logs/PPO-MlpPolicy-08-05-2023-16-51-19_best/best_model.zip
 - Train a new model: python3 gym_interface.py --action train --rl_algorithm PPO
 - Continue training of an existing model: python3 gym_interface.py --action cont_train --rl_algorithm PPO --model logs/PPO-MlpPolicy-08-05-2023-16-51-19_best/best_model.zip
+- In separate terminal run: tensorboard --logdir <tensorboard log directory> to open tensorboard dashboard
 If --exec argument is not provided, You need to have Unity Editor open with the environment prepared and after launching this script, launch the simulation in Unity"""
 
 parser = argparse.ArgumentParser(
@@ -65,9 +67,9 @@ def main():
 
     # Train
     if args.action == "train" or args.action == "cont_train":
-        filename_best, filename_checkpoint = prep_logfile_name(args.rl_algorithm)
+        filename_best, filename_checkpoint, tb_log_filename = prep_logfile_names(args.rl_algorithm)
         eval_callback, checkpoint_callback = prep_callbacks(env, filename_best, filename_checkpoint)
-        model.learn(total_timesteps=args.steps, callback=[eval_callback, checkpoint_callback], progress_bar=True)
+        model.learn(total_timesteps=args.steps, callback=[eval_callback, checkpoint_callback], progress_bar=True, tb_log_name=tb_log_filename)
 
     # Evaluation
     else:
