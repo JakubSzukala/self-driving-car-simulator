@@ -73,4 +73,14 @@ crashlytics-build.properties
 
 /results
 
+# Build outputs
+*.so
+*.x86_64
+/*_Data/
+/*_BurstDebugInformation_DoNotShip
+
+# Trained models
+/python-side-training/gym-train/logs
+/python-side-training/gym-train/tensorboard
+
 TODO.md
