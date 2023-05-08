@@ -21,8 +21,11 @@ public class RaceCarAgent : Agent
     [SerializeField] private float agentFellOffPenalty = -100f;
     [SerializeField] private float minScoreThreshold = -10f;
 
+    // Episode time increment [s]
+    [SerializeField] private float episodeTimeIncrement = 10f;
+
     // Discrete or continous flag
-    [SerializeField] private bool discrete = true;
+    [SerializeField] private bool discrete = false;
 
     // Relevant GameObjects
     [SerializeField] private RaceTrack raceTrack;
@@ -37,8 +40,6 @@ public class RaceCarAgent : Agent
     // Lidar interface
     private LidarDataSubscriber lidarDataSubscriber;
 
-    private int checkpointsN;
-
     void Awake()
     {
         raceTrack.checkpointReached.AddListener(OnCheckpointReached);
@@ -50,8 +51,6 @@ public class RaceCarAgent : Agent
     {
         // Spawn race track
         raceTrack.CreateRaceTrack(true);
-        float spacing = raceTrack.GetCheckPointsSpacing();
-        checkpointsN = raceTrack.checkPointContainer.transform.childCount;
 
         // Set the agent car at the start
         Vector3 start, direction;
@@ -135,6 +134,7 @@ public class RaceCarAgent : Agent
     private void OnEpisodeEnd()
     {
         EpisodeCleanup();
+        episodeTimer.startTime += episodeTimeIncrement;
         EndEpisode();
     }
 }
