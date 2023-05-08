@@ -1395,7 +1395,8 @@ MonoBehaviour:
   trackFinishedReward: 1500
   timeElapsedPenalty: -0.1
   agentFellOffPenalty: -100
-  minScoreThreshold: -50
+  minScoreThreshold: -150
+  episodeTimeIncrement: 10
   discrete: 0
   raceTrack: {fileID: 145761719}
   carSpawner: {fileID: 1549050501}
