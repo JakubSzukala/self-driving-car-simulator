@@ -123,9 +123,9 @@ public class RaceCarAgent : Agent
     // Callbacks
     private void OnCheckpointReached()
     {
-        int checkpointsScored = checkpointsN - raceTrack.checkPointContainer.transform.childCount;
-        float scaledReward = checkpointReward / (float) checkpointsScored;
-        AddReward(scaledReward);
+        //int checkpointsScored = checkpointsN - raceTrack.checkPointContainer.transform.childCount - 1;
+        //float scaledReward = checkpointReward / (float) checkpointsScored;
+        AddReward(checkpointReward);
     }
 
     private void OnTimePenalty()

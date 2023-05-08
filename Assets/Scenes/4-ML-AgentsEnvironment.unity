@@ -1391,7 +1391,7 @@ MonoBehaviour:
   MaxStep: 0
   maxAcceleration: 1.5
   maxSteerAngle: 35
-  checkpointReward: 1000
+  checkpointReward: 10
   trackFinishedReward: 1500
   timeElapsedPenalty: -0.1
   agentFellOffPenalty: -100
