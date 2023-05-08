@@ -50,6 +50,7 @@ public class RaceCarAgent : Agent
     {
         // Spawn race track
         raceTrack.CreateRaceTrack(true);
+        float spacing = raceTrack.GetCheckPointsSpacing();
         checkpointsN = raceTrack.checkPointContainer.transform.childCount;
 
         // Set the agent car at the start

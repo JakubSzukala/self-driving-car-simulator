@@ -47,7 +47,12 @@ public class RaceTrack : MonoBehaviour
     public void GetRaceTrackStart(out Vector3 start, out Vector3 direction)
     {
         Vector2 startXY, directionXY;
-        raceTrackPathCreator.GetStart(out startXY, out directionXY);
+
+        // Shift spawn point forward so agent won't spawn on checkpoint
+        startXY = Vector2.Lerp(path[0], path[1], 0.5f);
+        directionXY = path[1] - startXY;
+
+        // Convert from XY plane to XZ plane
         Vector3 startXZ = new Vector3(startXY.x, 0, startXY.y);
         Vector3 directionXZ = new Vector3(directionXY.x, 0, directionXY.y);
         start = startXZ;
@@ -66,6 +71,11 @@ public class RaceTrack : MonoBehaviour
             float width = GetComponentInChildren<RoadRenderer>().roadWidth;
             checkPointSpawner.SpawnCheckPoint(pointXZ, direction, width);
         }
+    }
+
+    public float GetCheckPointsSpacing()
+    {
+        return Vector2.Distance(path[0], path[1]);
     }
 
     public void DestroyRaceTrackCheckPoints()
