@@ -16,12 +16,12 @@ public class SimpleCountDownTimer : MonoBehaviour
         targetTime = startTime;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (!running) return;
         if (targetTime > 0)
         {
-            targetTime -= Time.deltaTime;
+            targetTime -= Time.fixedDeltaTime;
         }
         else
         {
