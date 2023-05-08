@@ -86,7 +86,7 @@ public class RaceCarAgent : Agent
         }
 
         // If wall collision is disabled, car can fall out of track, add penalty for that
-        if (agentCar.transform.position.y < -1)
+        if (agentCar.transform.position.y < 0)
         {
             AddReward(agentFellOffPenalty);
             EpisodeCleanup();
