@@ -5,9 +5,9 @@ from utilities import *
 
 # CLI initialization
 usage_message ="""Example usage:
-- Evaluate trained PPO model: python3 gym_train.py --action eval --rl_algorithm PPO --model logs/PPO-MlpPolicy-08-05-2023-16-51-19_best/best_model.zip
-- Train a new model: python3 gym_train.py --action train --rl_algorithm PPO
-- Continue training of an existing model: python3 gym_train.py --action cont_train --rl_algorithm PPO --model logs/PPO-MlpPolicy-08-05-2023-16-51-19_best/best_model.zip
+- Evaluate trained PPO model: python3 gym_interface.py --action eval --rl_algorithm PPO --model logs/PPO-MlpPolicy-08-05-2023-16-51-19_best/best_model.zip
+- Train a new model: python3 gym_interface.py --action train --rl_algorithm PPO
+- Continue training of an existing model: python3 gym_interface.py --action cont_train --rl_algorithm PPO --model logs/PPO-MlpPolicy-08-05-2023-16-51-19_best/best_model.zip
 If --exec argument is not provided, You need to have Unity Editor open with the environment prepared and after launching this script, launch the simulation in Unity"""
 
 parser = argparse.ArgumentParser(
@@ -82,6 +82,3 @@ def main():
     env.close()
 
 main()
-
-#model = PPO.load("logs/PPO-MlpPolicy-08-05-2023-11-24-54_best/best_model.zip")
-#model = PPO.load("logs/PPO-MlpPolicy-08-05-2023-16-51-19_best/best_model.zip")
