@@ -56,6 +56,10 @@ public class RaceCarAgent : Agent
         Vector3 start, direction;
         raceTrack.GetRaceTrackStart(out start, out direction);
 
+        // Randomly change driving direction
+        float seed = Random.Range(0f, 1f);
+        if (seed > 0.5f) direction = -direction;
+
         // Instantiate a car, get reference to it and assign lidar subscriber
         GameObject.Destroy(agentCar);
         agentCar = carSpawner.spawnCar(start, direction);
