@@ -37,6 +37,8 @@ public class RaceCarAgent : Agent
     // Lidar interface
     private LidarDataSubscriber lidarDataSubscriber;
 
+    private int checkpointsN;
+
     void Awake()
     {
         raceTrack.checkpointReached.AddListener(OnCheckpointReached);
@@ -48,6 +50,7 @@ public class RaceCarAgent : Agent
     {
         // Spawn race track
         raceTrack.CreateRaceTrack(true);
+        checkpointsN = raceTrack.checkPointContainer.transform.childCount;
 
         // Set the agent car at the start
         Vector3 start, direction;
@@ -81,7 +84,7 @@ public class RaceCarAgent : Agent
         if(raceTrack.checkPointContainer.transform.childCount == 0)
         {
             AddReward(trackFinishedReward);
-            EpisodeCleanup();
+            EpisodeCleanup(); // Keep this ordering due to race conditions
             EndEpisode();
         }
 
@@ -120,7 +123,8 @@ public class RaceCarAgent : Agent
     // Callbacks
     private void OnCheckpointReached()
     {
-        float scaledReward = checkpointReward / (float) raceTrack.checkPointContainer.transform.childCount;
+        int checkpointsScored = checkpointsN - raceTrack.checkPointContainer.transform.childCount;
+        float scaledReward = checkpointReward / (float) checkpointsScored;
         AddReward(scaledReward);
     }
 
