@@ -48,7 +48,7 @@ public class RaceTrack : MonoBehaviour
     {
         Vector2 startXY, directionXY;
         raceTrackPathCreator.GetStart(out startXY, out directionXY);
-        Vector3 startXZ = new Vector3(startXY.x, 2, startXY.y);
+        Vector3 startXZ = new Vector3(startXY.x, 0, startXY.y);
         Vector3 directionXZ = new Vector3(directionXY.x, 0, directionXY.y);
         start = startXZ;
         direction = directionXZ;
