@@ -1,6 +1,8 @@
 import math
 import argparse
 
+from stable_baselines3.common.utils import set_random_seed
+
 from utilities import *
 
 # CLI initialization
@@ -56,6 +58,7 @@ parser.add_argument(
 
 
 def main():
+    set_random_seed(0)
     # Parse arguments
     args = parser.parse_args()
     if (args.action == "cont_train" or args.action =="eval") and args.model is None:
