@@ -28,6 +28,10 @@ public class RaceCarAgent : Agent
     // Discrete or continous flag
     [SerializeField] private bool discrete = false;
 
+    // Steering angle change limitation for smoother control
+    [SerializeField] private bool limitSteeringAngleChange = false;
+    [SerializeField] private float maxSteeringAngleChange = 5f;
+
     // Relevant GameObjects
     [SerializeField] private RaceTrack raceTrack;
     [SerializeField] private CarSpawner carSpawner;
@@ -85,11 +89,20 @@ public class RaceCarAgent : Agent
     {
         // Apply actions
         float controlSignalAcc, controlSignalSteer;
-        controlSignalAcc = maxAcceleration * (discrete ? actionBuffers.DiscreteActions[0] : actionBuffers.ContinuousActions[0]);
-        controlSignalSteer = maxSteerAngle * (discrete ? actionBuffers.DiscreteActions[1] : actionBuffers.ContinuousActions[1]);
+        controlSignalAcc = maxAcceleration * actionBuffers.ContinuousActions[0];
+        controlSignalSteer = maxSteerAngle * actionBuffers.ContinuousActions[1];
+        if (limitSteeringAngleChange)
+        {
+            float steeringAngleChange = controlSignalSteer - agentCar.GetComponent<Vehicle>().SteerAngleInput;
+            float clampedSteeringAngleChange = Mathf.Clamp(steeringAngleChange, -maxSteeringAngleChange, maxSteeringAngleChange);
+            Debug.Log("Before: " + agentCar.GetComponent<Vehicle>().SteerAngleInput + " and after " + (agentCar.GetComponent<Vehicle>().SteerAngleInput + clampedSteeringAngleChange) + " and change: " + steeringAngleChange);
+            agentCar.GetComponent<Vehicle>().SteerAngleInput = agentCar.GetComponent<Vehicle>().SteerAngleInput + clampedSteeringAngleChange;
+        }
+        else
+        {
+            agentCar.GetComponent<Vehicle>().SteerAngleInput = controlSignalSteer;
+        }
         agentCar.GetComponent<Vehicle>().AccelerationInput = controlSignalAcc;
-        agentCar.GetComponent<Vehicle>().SteerAngleInput = controlSignalSteer;
-        Debug.Log("Acc: " + controlSignalAcc + " Steer: " + controlSignalSteer);
 
         // If all checkpoints were scored add big reward
         if(raceTrack.checkPointContainer.transform.childCount == 0)
