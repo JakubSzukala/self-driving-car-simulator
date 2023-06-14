@@ -367,7 +367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14cd8ea2d159de102977117b86d2a923, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roadWidth: 2.25
+  roadWidth: 1.5
   roadMaterial: {fileID: 2100000, guid: 00da64a200865559781e2e55ee74114b, type: 2}
 --- !u!23 &171356633
 MeshRenderer:
@@ -539,8 +539,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3db1b7a62277d2cb9321f6a6a19b309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wallHeight: 1
-  roadWidth: 2.25
+  wallHeight: 0.2
+  roadWidth: 1.5
   wallMaterial: {fileID: 2100000, guid: 75fd7f2299865a55f8d009ee5eece9e9, type: 2}
   side: 0
   wallCollision: 0
@@ -663,8 +663,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3db1b7a62277d2cb9321f6a6a19b309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wallHeight: 1
-  roadWidth: 2.25
+  wallHeight: 0.2
+  roadWidth: 1.5
   wallMaterial: {fileID: 2100000, guid: 75fd7f2299865a55f8d009ee5eece9e9, type: 2}
   side: 1
   wallCollision: 0
@@ -1146,9 +1146,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  Distance: 10
+  Distance: 2
   Offset: 0
-  Height: 5
+  Height: 2
   HeightMultiplier: 0.5
 --- !u!1 &1319417408
 GameObject:
@@ -1398,6 +1398,8 @@ MonoBehaviour:
   minScoreThreshold: -150
   episodeTimeIncrement: 10
   discrete: 0
+  limitSteeringAngleChange: 1
+  maxSteeringAngleChange: 10
   raceTrack: {fileID: 145761719}
   carSpawner: {fileID: 1549050501}
   penaltyTimer: {fileID: 109403312}
