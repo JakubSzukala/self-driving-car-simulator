@@ -76,6 +76,7 @@ def main():
 
     # Evaluation
     else:
+        # In unity env observation is already normalized
         obs, reward, done, info = env.step(env.action_space.sample())
         for i in range(10_000):
             if done:

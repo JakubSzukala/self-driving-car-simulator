@@ -7,6 +7,7 @@ using Unity.MLAgents.Actuators;
 using AWSIM.LaserFormat;
 using AWSIM;
 using RGLUnityPlugin;
+using System.Linq;
 
 public class RaceCarAgent : Agent
 {
@@ -72,7 +73,12 @@ public class RaceCarAgent : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        sensor.AddObservation(lidarDataSubscriber.Distances);
+        float[] normalizedDistances = new float[lidarDataSubscriber.Distances.Length];
+        for (int i = 0; i < lidarDataSubscriber.Distances.Length; i++)
+        {
+            normalizedDistances[i] = lidarDataSubscriber.Distances[i] / agentCar.GetComponentInChildren<LidarSensor>().configuration.maxRange;
+        }
+        sensor.AddObservation(normalizedDistances);
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
@@ -83,6 +89,7 @@ public class RaceCarAgent : Agent
         controlSignalSteer = maxSteerAngle * (discrete ? actionBuffers.DiscreteActions[1] : actionBuffers.ContinuousActions[1]);
         agentCar.GetComponent<Vehicle>().AccelerationInput = controlSignalAcc;
         agentCar.GetComponent<Vehicle>().SteerAngleInput = controlSignalSteer;
+        Debug.Log("Acc: " + controlSignalAcc + " Steer: " + controlSignalSteer);
 
         // If all checkpoints were scored add big reward
         if(raceTrack.checkPointContainer.transform.childCount == 0)
