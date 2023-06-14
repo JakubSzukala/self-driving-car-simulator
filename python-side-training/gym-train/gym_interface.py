@@ -2,6 +2,7 @@ import math
 import argparse
 
 from stable_baselines3.common.utils import set_random_seed
+import numpy as np
 
 from utilities import *
 
@@ -39,7 +40,7 @@ parser.add_argument(
 parser.add_argument(
     "-l", "--rl_algorithm",
     action="store",
-    choices=["PPO", "A2C", "DQN"],
+    choices=["PPO", "A2C", "DQN", "RecurrentPPO"],
     required=True,
     help="Reinforcement algorithm name"
 )
@@ -78,12 +79,20 @@ def main():
     else:
         # In unity env observation is already normalized
         obs, reward, done, info = env.step(env.action_space.sample())
+        lstm_states = None
+        episode_start = True
         for i in range(10_000):
             if done:
                 env.reset()
                 break
-            action, state = model.predict(obs, deterministic=True)
+            action, lstm_states = model.predict(
+                obs,
+                state=lstm_states,
+                episode_start=episode_start,
+                deterministic=True
+            )
             obs, reward, done, info = env.step(action)
+            episode_start = False
 
     env.close()
 

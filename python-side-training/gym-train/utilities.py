@@ -7,6 +7,7 @@ from mlagents_envs.environment import UnityEnvironment
 from mlagents_envs.side_channel.engine_configuration_channel import EngineConfigurationChannel
 
 from stable_baselines3 import A2C, PPO, DQN
+from sb3_contrib import RecurrentPPO
 from stable_baselines3.common.callbacks import EvalCallback
 from stable_baselines3.common.callbacks import CheckpointCallback
 
@@ -39,6 +40,8 @@ def prep_train_model(rl_algorithm: str, env: UnityToGymWrapper) -> Union[PPO, A2
         new_model = A2C("MlpPolicy", env, verbose=1, tensorboard_log="tensorboard")
     elif rl_algorithm == "DQN":
         new_model = DQN("MlpPolicy", env, verbose=1, tensorboard_log="tensorboard")
+    elif rl_algorithm == "RecurrentPPO":
+        new_model = RecurrentPPO("MlpLstmPolicy", env, verbose=1, tensorboard_log="tensorboard")
     return new_model
 
 
@@ -49,6 +52,8 @@ def prep_eval_model(rl_algorithm: str, model_path: str):
         new_model = A2C.load(model_path)
     elif rl_algorithm == "DQN":
         new_model = DQN.load(model_path)
+    elif rl_algorithm == "RecurrentPPO":
+        new_model = RecurrentPPO.load(model_path)
     return new_model
 
 
@@ -59,6 +64,8 @@ def prep_cont_train_model(rl_algorithm: str, env: UnityToGymWrapper, model_path:
         new_model = A2C.load(model_path)
     elif rl_algorithm == "DQN":
         new_model = DQN.load(model_path)
+    elif rl_algorithm == "RecurrentPPO":
+        new_model = RecurrentPPO.load(model_path)
     new_model.set_env(env)
     return new_model
 
@@ -87,7 +94,7 @@ def prep_callbacks(env: UnityToGymWrapper, filename_best: str, filename_checkpoi
             env,
             best_model_save_path=os.path.join("logs", filename_best),
             log_path=os.path.join("logs", filename_best),
-            eval_freq=1000,
+            eval_freq=5000,
             deterministic=True,
             render=False
         )
