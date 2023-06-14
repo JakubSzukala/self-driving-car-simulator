@@ -16,8 +16,8 @@ public class RaceCarAgent : Agent
     [SerializeField] private float maxSteerAngle = 35;
 
     // Rewards and penalties
-    [SerializeField] private float checkpointReward = 1f;
     [SerializeField] private float trackFinishedReward = 10f;
+    private float checkpointReward;
     [SerializeField] private float timeElapsedPenalty = -.1f;
     [SerializeField] private float agentFellOffPenalty = -100f;
     [SerializeField] private float minScoreThreshold = -10f;
@@ -60,6 +60,9 @@ public class RaceCarAgent : Agent
         // Set the agent car at the start
         Vector3 start, direction;
         raceTrack.GetRaceTrackStart(out start, out direction);
+
+        // Adjust reward for checkpoint, so longer track will award the same amount as short track
+        checkpointReward = trackFinishedReward / raceTrack.checkPointContainer.transform.childCount;
 
         // Randomly change driving direction
         float seed = Random.Range(0f, 1f);
